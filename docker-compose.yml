@@ -24,6 +24,7 @@ services:
       - licenta-nginx-php-mysql
 
   licenta-php-service:
+    image: licenta-php-image
     build:
       context: .
       dockerfile: ./php/Dockerfile

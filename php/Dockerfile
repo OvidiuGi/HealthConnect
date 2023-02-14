@@ -13,7 +13,7 @@ WORKDIR /var/www/project
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy existing application directory contents
-COPY ./app /var/www/project
+COPY */licenta/app /var/www/project
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
