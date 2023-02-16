@@ -1,23 +1,46 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_MEDIC
+        ROLE_MEDIC: ROLE_USER
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
     providers:
-        users_in_memory: { memory: null }
+        user_email_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        admin:
             lazy: true
-            provider: users_in_memory
+            pattern: ^/admin
+            provider: user_email_provider
+            form_login:
+                login_path: admin_login
+                check_path: admin_login
+                enable_csrf: true
+                default_target_path: admin_main_page
+            logout:
+                path: admin_logout
+                target: admin_login
+#        web:
+#            lazy: true
+#            provider: user_email_provider
+#            form_login:
+#                login_path: web_login
+#                check_path: web_login
+#                enable_csrf: true
+#            logout:
+#                path: web_logout
+#                target: web_main_page
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

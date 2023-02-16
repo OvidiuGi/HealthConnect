@@ -10,12 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: '`user`')]
-class User implements PasswordAuthenticatedUserInterface
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
+    public const ROLE_USER = 'ROLE_USER';
+
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+
+    public const ROLE_MEDIC = 'ROLE_MEDIC';
+
+    public const ROLES = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_MEDIC'];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -47,10 +56,9 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Appointment::class)]
     private Collection $appointments;
 
-    // Many Users have One Role.
-    #[ORM\ManyToOne(targetEntity: Role::class)]
-    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id')]
-    private Role $role;
+    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[Assert\Choice(choices: User::ROLES, multiple: false)]
+    public string $role = '';
 
     // Many Doctors work at One Building.
     #[ORM\ManyToOne(targetEntity: Building::class, inversedBy: 'doctors')]
@@ -143,18 +151,6 @@ class User implements PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setRole(Role $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getRole(): Role
-    {
-        return $this->role;
-    }
-
     public function setOffice(Building $office): self
     {
         $this->office = $office;
@@ -176,7 +172,7 @@ class User implements PasswordAuthenticatedUserInterface
         $user->plainPassword = $dto->password;
         $user->telephoneNr = $dto->telephoneNr;
         $user->cnp = $dto->cnp;
-        $user->setRole($dto->getRole());
+        $user->role = $dto->role;
 
         return $user;
     }
@@ -184,5 +180,19 @@ class User implements PasswordAuthenticatedUserInterface
     public function getPassword(): ?string
     {
         return $this->password;
+    }
+
+    public function getRoles(): array
+    {
+        return [$this->role];
+    }
+
+    public function eraseCredentials()
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
     }
 }

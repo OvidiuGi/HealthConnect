@@ -21,7 +21,7 @@ class Appointment
     private ?\DateTime $endTime;
 
     // Many Appointment have one Customer.
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'appointments')]
     #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
     private User $customer;
 

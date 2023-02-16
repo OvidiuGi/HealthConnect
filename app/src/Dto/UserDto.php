@@ -4,41 +4,25 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-use App\Entity\Role;
 use App\Entity\User;
-use App\Repository\RoleRepository;
 
 class UserDto
 {
-    public int $id = 0;
+    public int $id;
 
-    public string $firstName = '';
+    public string $firstName;
 
-    public string $lastName = '';
+    public string $lastName;
 
-    public string $email = '';
+    public string $email;
 
-    public string $password = '';
+    public string $password;
 
-    public string $telephoneNr = '';
+    public string $telephoneNr;
 
-    public string $cnp = '';
+    public string $cnp;
 
-    public int $roleId = 0;
-
-    private ?Role $role = null;
-
-    public function setRole(?Role $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-    public function getRole(): ?Role
-    {
-        return $this->role;
-    }
+    public string $role;
 
     public static function createFromUser(User $user): self
     {
@@ -50,7 +34,7 @@ class UserDto
 //        $dto->password = $user->password;
         $dto->telephoneNr = $user->telephoneNr;
         $dto->cnp = $user->cnp;
-        $dto->roleId = $user->getRole()->getId();
+        $dto->role = $user->role;
 
         return $dto;
     }
