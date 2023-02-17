@@ -34,4 +34,10 @@ class LoginController extends AbstractController
             'registerForm' => $form->createView(),
         ]);
     }
+
+    #[Route(path: '/logout', name: 'web_logout', methods: ['GET'])]
+    public function logout(): void
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
+    }
 }

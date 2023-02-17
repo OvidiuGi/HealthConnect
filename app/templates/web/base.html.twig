@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+            </ul>
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-light me-2">Login</button>
+                <button type="button" class="btn btn-outline-light me-2">Sign-up</button>
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<body>
+    {% block body %}
+        <div class="container">
+            <img src="{{ asset('build/images/bichon2_.jpg') }}" class="img-fluid p-5" alt="Responsive image">
+        </div>
+    {% endblock %}
+</body>
+
+<footer class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-md-2 mb-3">
+                <h5>Section</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">Home</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">Features</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">Pricing</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">FAQs</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">About</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4 offset-md-5 mb-1">
+                <form>
+                    <h5>Subscribe to our newsletter</h5>
+                    <div class="d-flex w-100 gap-2">
+                        <label for="newsletter1" class="visually-hidden">Email address</label>
+                        <input type="text" class="form-control" id="newsletter1" placeholder="Email address">
+                        <button class="btn btn-outline-dark" type="button">Subscribe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</html>
