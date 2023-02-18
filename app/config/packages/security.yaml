@@ -30,31 +30,26 @@ security:
             logout:
                 path: admin_logout
                 target: admin_login
-#        web:
-#            lazy: true
-#            provider: user_email_provider
-#            form_login:
-#                login_path: web_login
-#                check_path: web_login
-#                enable_csrf: true
-#            logout:
-#                path: web_logout
-#                target: web_main_page
+        web:
+            lazy: true
+            provider: user_email_provider
+            form_login:
+                login_path: web_login
+                check_path: web_login
+                enable_csrf: true
+                default_target_path: web_main_page
+            logout:
+                path: web_logout
+                target: web_login
 
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+#         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+#         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:
         password_hashers:
-            # By default, password hashers are resource intensive and take time. This is
-            # important to generate secure password hashes. In tests however, secure hashes
-            # are not important, waste resources and increase test times. The following
-            # reduces the work factor to the lowest possible values.
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
                 cost: 4 # Lowest possible value for bcrypt

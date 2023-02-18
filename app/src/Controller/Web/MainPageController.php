@@ -12,6 +12,6 @@ class MainPageController extends AbstractController
     #[Route(path: '/', name: 'web_main_page', methods: ['GET'])]
     public function load(): Response
     {
-        return $this->render('web/main_page/main_page.html.twig', []);
+        return $this->render('web/main_page/main_page.html.twig');
     }
 }
