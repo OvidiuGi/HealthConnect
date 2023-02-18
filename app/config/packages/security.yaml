@@ -40,7 +40,7 @@ security:
                 default_target_path: web_main_page
             logout:
                 path: web_logout
-                target: web_login
+                target: web_main_page
 
     access_control:
 #         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
