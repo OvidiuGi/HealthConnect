@@ -41,6 +41,9 @@ security:
             logout:
                 path: web_logout
                 target: web_main_page
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800 # 1 week in seconds
 
     access_control:
 #         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
