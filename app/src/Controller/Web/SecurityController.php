@@ -1,16 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Web;
 
-use App\Form\Admin\RegisterFormType;
+use App\Form\UserRegisterFormType;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[Route(path: '/')]
-class LoginController extends AbstractController
+class SecurityController extends AbstractController
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    private UserRepository $userRepository;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher, UserRepository $userRepository)
+    {
+        $this->passwordHasher = $passwordHasher;
+        $this->userRepository = $userRepository;
+    }
+
     #[Route(path: '/login', name: 'web_login', methods: ['GET','POST'])]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -26,9 +41,18 @@ class LoginController extends AbstractController
     }
 
     #[Route(path: '/register', name: 'web_register', methods: ['GET','POST'])]
-    public function register()
+    public function register(Request $request)
     {
-        $form = $this->createForm(RegisterFormType::class);
+        $form = $this->createForm(UserRegisterFormType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+            $user->password = $this->passwordHasher->hashPassword($user, $user->plainPassword);
+            $this->userRepository->save($user);
+
+            return $this->redirectToRoute('web_login');
+        }
 
         return $this->render('web/login/register.html.twig', [
             'registerForm' => $form->createView(),
