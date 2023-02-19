@@ -9,12 +9,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: '`user`')]
+//Mai joaca te cu asta. Ca mai trebuie adaugate si CNP si alte chestii
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     public const ROLE_USER = 'ROLE_USER';
@@ -31,25 +34,30 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[Assert\NotBlank(message: 'Please enter your first name')]
     public string $firstName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[Assert\NotBlank(message: 'Please enter your last name')]
     public string $lastName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
     #[Assert\Email]
+    #[Assert\NotBlank(message: 'Please enter an email')]
     public string $email = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank]
     public string $password = '';
 
+    #[Assert\NotBlank(message: 'Please enter a password')]
     public string $plainPassword = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
+    #[Assert\NotBlank(message: 'Please enter your telephone number')]
     public string $telephoneNr = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
+    #[Assert\NotBlank(message: 'Please enter your CNP')]
     public string $cnp = '';
 
     // One User has Many Appointments.

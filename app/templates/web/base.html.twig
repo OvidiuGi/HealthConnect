@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('web') }}
     {% endblock %}
 
     {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('web') }}
     {% endblock %}
 </head>
 <header class="p-3 text-bg-dark">
@@ -27,7 +27,7 @@
                 <a href="{{ path('web_logout') }}" class="btn btn-outline-light me-2">Logout</a>
                 {% else %}
                 <a href="{{ path('web_login') }}" class="btn btn-outline-light me-2">Login</a>
-                <button type="button" href="#" class="btn btn-outline-light me-2">Sign-up</button>
+                <a href="{{ path('web_register') }}" class="btn btn-outline-light me-2">Sign-up</a>
                 {% endif %}
             </div>
         </div>

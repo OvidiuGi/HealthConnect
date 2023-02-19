@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('form') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('form') }}
+    {% endblock %}
+</head>
+<header>{% block header %}{% endblock %}</header>
+
+<body class="text-center">
+<main class="form-sigin w-100 m-auto">
+{% block body %}{% endblock %}
+</main>
+</body>
+
+</html>
