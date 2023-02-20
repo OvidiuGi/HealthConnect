@@ -1,0 +1,16 @@
+body {
+    background-color: white;
+    height: 95%;
+}
+
+html {
+    height: 100%;
+}
+
+#myDiv {
+    height: 100%;
+}
+
+#myRow {
+    height: 100%;
+}

@@ -1,3 +1,24 @@
 body {
     background-color: white;
+    height: 100%;
+}
+
+html {
+    height: 100%;
+    /*position: sticky;*/
+    /*overflow: hidden;*/
+}
+
+main {
+    height: 64.55%;
+}
+
+#myCarousel {
+    height: 100%;
+}
+.carousel-inner {
+    height: 100%;
+}
+.carousel-item {
+    height: 100%;
 }
