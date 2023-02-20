@@ -41,7 +41,7 @@ class SecurityController extends AbstractController
     }
 
     #[Route(path: '/register', name: 'web_register', methods: ['GET','POST'])]
-    public function register(Request $request)
+    public function register(Request $request): Response
     {
         $form = $this->createForm(UserRegisterFormType::class);
 
