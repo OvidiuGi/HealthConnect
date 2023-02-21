@@ -31,4 +31,32 @@ class UserRepository extends ServiceEntityRepository
             $this->entityManager->flush();
         }
     }
+
+    public function getPaginated(int $page, int $limit): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from('App\Entity\User', 'u')
+            ->groupBy('u.id')
+            ->setFirstResult(($page * $limit) - $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getPaginatedMedics(int $page, int $limit): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from('App\Entity\User', 'u')
+            ->where('u.role = :role')
+            ->setParameter('role', 'ROLE_MEDIC')
+            ->groupBy('u.id')
+            ->setFirstResult(($page * $limit) - $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
 }

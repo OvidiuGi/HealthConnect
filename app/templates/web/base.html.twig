@@ -17,7 +17,7 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ path('web_main_page') }}" class="nav-link px-2 text-secondary">Home</a></li>
                 {% if app.user %}
-                <li><a href="#" class="nav-link px-2 text-white">My Appointments</a></li>
+                <li><a href="{{ path('web_show_appointments') }}" class="nav-link px-2 text-white">My Appointments</a></li>
                 {% endif %}
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About us</a></li>
@@ -55,7 +55,7 @@
                 <h5>Section</h5>
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ path('web_main_page') }}">Home</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">My Appointments</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ path('web_show_appointments') }}">My Appointments</a></li>
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">FAQs</a></li>
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">About us</a></li>
                 </ul>
