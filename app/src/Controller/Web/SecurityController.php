@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
-use App\Form\UserRegisterFormType;
+use App\Form\Web\UserRegisterFormType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

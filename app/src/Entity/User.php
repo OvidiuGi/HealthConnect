@@ -49,7 +49,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'string', length: 256, unique: true)]
     public string $password = '';
 
-    #[Assert\NotBlank(message: 'Please enter a password')]
+    #[Assert\NotBlank(message: 'Please enter a password', groups: ['create-user'])]
     public string $plainPassword = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
