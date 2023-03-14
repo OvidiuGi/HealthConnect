@@ -28,11 +28,26 @@ class Building
     #[ORM\OneToMany(mappedBy: 'office', targetEntity: User::class)]
     private Collection $doctors;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\Datetime $startHour;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $startHour;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\Datetime $endHour;
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $endHour;
+
+    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    public string $name = '';
+
+    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    public string $postalCode = '';
+
+    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    public string $phone = '';
+
+    #[ORM\Column(type: 'string', length: 256, unique: true)]
+    public string $email = '';
+
+    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    public string $description = '';
 
     public function __construct()
     {
@@ -44,26 +59,26 @@ class Building
         return $this->id;
     }
 
-    public function setStartHour(?\Datetime $startHour): self
+    public function setStartHour(?\DateTimeImmutable $startHour): self
     {
         $this->startHour = $startHour;
 
         return $this;
     }
 
-    public function getStartHour(): ?\Datetime
+    public function getStartHour(): ?\DateTimeImmutable
     {
         return $this->startHour;
     }
 
-    public function setEndHour(?\Datetime $endHour): self
+    public function setEndHour(?\DateTimeImmutable $endHour): self
     {
         $this->endHour = $endHour;
 
         return $this;
     }
 
-    public function getEndHour(): ?\Datetime
+    public function getEndHour(): ?\DateTimeImmutable
     {
         return $this->endHour;
     }

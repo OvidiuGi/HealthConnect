@@ -26,7 +26,7 @@
                         <td>{{ building.endHour.format('H:i') }}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> Edit</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_edit_buildings',{'id': building.id})}}"> Edit</a>
                                 <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
                             </div>
                         </td>

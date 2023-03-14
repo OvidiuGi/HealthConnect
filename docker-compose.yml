@@ -2,12 +2,15 @@ version: "3.7"
 
 networks:
   licenta-nginx-php-mysql:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 160.100.0.0/16
 
 volumes:
   db_data:
 
 services:
-
   #nginx service
   licenta-nginx-service:
     image: nginx:stable-alpine
@@ -21,7 +24,8 @@ services:
       - licenta-php-service
       - licenta-mysql-service
     networks:
-      - licenta-nginx-php-mysql
+      licenta-nginx-php-mysql:
+        ipv4_address: 160.100.0.5
 
   licenta-php-service:
     image: licenta-php-image
@@ -31,11 +35,14 @@ services:
     container_name: licenta-php-container
     ports:
       - "9000:9000"
+    environment:
+        PHP_IDE_CONFIG: serverName=licenta.local
     volumes:
       - ./app:/var/www/project
       - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     networks:
-      - licenta-nginx-php-mysql
+      licenta-nginx-php-mysql:
+        ipv4_address: 160.100.0.6
 
   licenta-mysql-service:
     image: mysql:8.0
@@ -52,4 +59,15 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: parola123
     networks:
-      - licenta-nginx-php-mysql
+      licenta-nginx-php-mysql:
+        ipv4_address: 160.100.0.7
+
+  licenta-redis-service:
+    image: redis:6.2
+    container_name: licenta-redis-container
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      licenta-nginx-php-mysql:
+        ipv4_address: 160.100.0.12

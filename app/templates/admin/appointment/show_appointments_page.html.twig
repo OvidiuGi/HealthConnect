@@ -12,10 +12,10 @@
                     <th scope="col">Id</th>
                     <th scope="col">Service</th>
                     <th scope="col">Doctor</th>
+                    <th scope="col">Customer</th>
                     <th scope="col">City</th>
                     <th scope="col">Address</th>
-                    <th scope="col">Start Time</th>
-                    <th scope="col">End Time</th>
+                    <th scope="col">Time Interval</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
@@ -23,15 +23,15 @@
                 {% for appointment in appointments%}
                     <tr>
                         <td>{{appointment.id}}</td>
-                        <td><a class="nav-link text-secondary" href="#">{{appointment.services.name}}</a></td>
-                        <td><a class="nav-link text-secondary" href="#">{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</a></td>
+                        <td>{{appointment.service.name}}</td>
+                        <td>{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</td>
+                        <td>{{ appointment.customer.firstName }} {{ appointment.customer.lastName }}</td>
                         <td>{{ appointment.doctor.office.city }}</td>
                         <td>{{ appointment.doctor.office.address }}</td>
-                        <td>{{ appointment.startTime.format('H:i') }}</td>
-                        <td>{{ appointment.endTime.format('H:i') }}</td>
+                        <td>{{ appointment.timeInterval }}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> Edit</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_edit_appointment',{'id': appointment.id})}}"> Edit</a>
                                 <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
                             </div>
                         </td>

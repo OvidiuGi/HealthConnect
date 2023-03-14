@@ -1,0 +1,57 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <div class="container">
+        {{ form_start(form, {method: 'POST'}) }}
+        <h1 class="text-center">Edit Medic</h1>
+        <div class="form-floating">
+            {{ form_widget(form.firstName, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.firstName, 'First name', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.lastName, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.lastName, 'Last name', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.email, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.email, 'Email', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.telephoneNr, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.telephoneNr, 'Telephone Number', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.telephoneNr) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.cnp, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.cnp, 'CNP', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.cnp) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.specialization, {attr: {class: 'form-control'}}) }}
+            {{ form_label(form.specialization, 'Specialization', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.specialization) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.experience, {attr: {class: 'form-control'}}) }}
+            {{ form_label(form.experience, 'Experience', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.experience) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.office, {attr: {class: 'form-control'}}) }}
+            {{ form_label(form.office, 'Office', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.office) }}
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

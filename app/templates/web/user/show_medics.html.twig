@@ -1,0 +1,14 @@
+{% extends 'web/base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        {% for medic in medics%}
+            <div class="col-lg-4">
+                <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+                <h2>{{ medic.firstName}} {{ medic.lastName }}</h2>
+                <p>{{ medic.specialization }}, Experience {{ medic.experience }} years.</p>
+                <p><a class="btn btn-secondary" href="{{ path('web_add_appointment_by_medic', {'id': medic.id}) }}" role="button">Book</a></p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

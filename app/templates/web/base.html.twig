@@ -16,20 +16,27 @@
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ path('web_main_page') }}" class="nav-link px-2 text-secondary">Home</a></li>
-                {% if app.user %}
-                <li><a href="{{ path('web_show_appointments') }}" class="nav-link px-2 text-white">My Appointments</a></li>
-                {% endif %}
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About us</a></li>
+                {% if app.user %}
+                    <li><a href="{{ path('web_show_appointments') }}" class="nav-link px-2 text-white">My Appointments</a></li>
+                {% endif %}
             </ul>
             <div class="text-end">
                 {% if app.user %}
-                <a href="#" class="btn btn-outline-light me-2">New Appointment</a>
+                <a href="{{ path('web_new_appointment') }}" class="btn btn-outline-light me-2">New Appointment</a>
                     <div class="btn me-2 dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">My Account
                             <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow w-220px">
+                            {% if is_granted('ROLE_MEDIC') %}
+                            <li><a href="{{path('web_medic_appointments')}}" class="dropdown-item d-flex gap-2 align-items-center">Appointments</a></li>
+                            <li><a href="{{path('web_show_schedules')}}" class="dropdown-item d-flex gap-2 align-items-center">Edit Schedule</a></li>
+                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Edit Services</a></li>
+                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
+                            {% else %}
                             <li><a href="{{ path('web_edit_user') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
+                            {% endif %}
                             <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Change Password</a></li>
                             <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Delete Account</a></li>
                         </ul>
@@ -46,6 +53,8 @@
 
 <body>
     {% block body %} {% endblock %}
+    {{ encore_entry_script_tags('jquery') }}
+    {{ encore_entry_script_tags('new_appointment') }}
 </body>
 
 <footer>

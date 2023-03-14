@@ -75,13 +75,17 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     // Many Doctors have Many Services.
     #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'doctors')]
-    private ?Collection $services;
+    private Collection $services;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
     public ?string $specialization = '';
 
     #[ORM\Column(type: 'integer', length: 256, unique: false)]
     public ?int $experience = 0;
+
+    // One Doctor has Many Schedules.
+    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Schedule::class)]
+    private ?Collection $schedules;
 
     public function __construct()
     {
@@ -159,14 +163,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
-    public function setOffice(Building $office): self
+    public function setOffice(?Building $office): self
     {
         $this->office = $office;
 
         return $this;
     }
 
-    public function getOffice(): Building
+    public function getOffice(): ?Building
     {
         return $this->office;
     }
@@ -202,5 +206,39 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function getSchedule(): Collection
+    {
+        return $this->schedules;
+    }
+
+    public function setSchedule(Collection $schedules): self
+    {
+        $this->schedules = $schedules;
+
+        return $this;
+    }
+
+    public function addSchedule(Schedule $schedule): self
+    {
+        if (!$this->schedules->contains($schedule)) {
+            $this->schedules->add($schedule);
+            $schedule->setDoctor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSchedule(Schedule $schedule): self
+    {
+        if (!$this->schedules->contains($schedule)) {
+            return $this;
+        }
+
+        $this->schedules->removeElement($schedule);
+        $schedule->setDoctor(null);
+
+        return $this;
     }
 }

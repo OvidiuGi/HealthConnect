@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Form\Admin\UpdateAppointmentType;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,6 +33,25 @@ class AppointmentController extends AbstractController
             'page' => $paginate['page'],
             'size' => $paginate['size'],
             'totalPages' => $totalPages,
+        ]);
+    }
+
+    #[Route(path: "/appointments/{id}", name: 'admin_edit_appointment', methods: ['GET', 'POST'])]
+    public function editAppointment(int $id, Request $request): Response
+    {
+        $appointment = $this->appointmentRepository->findOneBy(['id' => $id]);
+
+        $form = $this->createForm(UpdateAppointmentType::class, $appointment);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->appointmentRepository->save($appointment);
+
+            return $this->redirectToRoute('admin_show_appointments');
+        }
+
+        return $this->render('admin/appointment/edit_appointments.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

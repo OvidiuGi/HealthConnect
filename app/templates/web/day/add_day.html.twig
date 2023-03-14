@@ -1,0 +1,25 @@
+{% extends 'form/base.form.html.twig' %}
+{% block title %} Welcome! {% endblock %}
+{% block body %}
+    {{ form_start(dayForm, {method: 'POST'}) }}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <h1>Add Day</h1>
+
+    {{ form_label(dayForm.date, 'Start Date', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(dayForm.date, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(dayForm.date) }}
+
+    {{ form_label(dayForm.startTime, 'Start Time', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(dayForm.startTime, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(dayForm.startTime) }}
+
+    {{ form_label(dayForm.endTime, 'End Time', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(dayForm.endTime, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(dayForm.endTime) }}
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+    {{ form_end(dayForm) }}
+{% endblock %}

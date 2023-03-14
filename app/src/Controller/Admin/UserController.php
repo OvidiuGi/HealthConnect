@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Form\Admin\UpdateMedicType;
 use App\Form\Admin\UpdateUserType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,5 +73,24 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit_user.html.twig', ['form' => $form->createView()]);
+    }
+
+    #[Route(path: "/medics/{id}", name: "admin_edit_medic", methods: ["GET", "POST"])]
+    public function editMedic(int $id, Request $request): Response
+    {
+        $user = $this->userRepository->find($id);
+
+        $form = $this->createForm(UpdateMedicType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $form->getData();
+
+            $this->userRepository->update($user);
+
+            return $this->redirectToRoute('admin_show_medics');
+        }
+
+        return $this->render('admin/user/edit_medic.html.twig', ['form' => $form->createView()]);
     }
 }

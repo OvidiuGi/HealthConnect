@@ -1,0 +1,36 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+    <div class="container">
+        {{ form_start(form, {method: 'POST'}) }}
+        <h1 class="text-center">Edit Building</h1>
+        <div class="form-floating">
+            {{ form_widget(form.address, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.address, 'Address', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.address) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.city, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.city, 'City', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.city) }}
+        </div>
+        {#        <div class="form-floating">#}
+        {#            {{ form_widget(form.startTime, {attr: {class: 'form-control', placeholder: ''#}
+        {#            }}) }}#}
+        {#            {{ form_label(form.startTime, 'Start Time', {label_attr: {class: 'form-label'}}) }}#}
+        {#            {{ form_errors(form.startTime) }}#}
+        {#        </div>#}
+        {#        <div class="form-floating">#}
+        {#            {{ form_widget(form.endTime, {attr: {class: 'form-control', placeholder: ''#}
+        {#            }}) }}#}
+        {#            {{ form_label(form.endTime, 'End Time', {label_attr: {class: 'form-label'}}) }}#}
+        {#            {{ form_errors(form.endTime) }}#}
+        {#        </div>#}
+        {{ form_widget(form) }}
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

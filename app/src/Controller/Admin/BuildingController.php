@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Admin;
 
+use App\Form\Admin\UpdateBuildingType;
 use App\Repository\BuildingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +35,25 @@ class BuildingController extends AbstractController
             'page' => $paginate['page'],
             'size' => $paginate['size'],
             'totalPages' => $totalPages
+        ]);
+    }
+
+    #[Route(path: "/buildings/{id}", name: 'admin_edit_buildings', methods: ['GET', 'POST'])]
+    public function edit(int $id, Request $request): Response
+    {
+        $building = $this->buildingRepository->findOneBy(['id' => $id]);
+
+        $form = $this->createForm(UpdateBuildingType::class, $building);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->buildingRepository->save($building);
+
+            return $this->redirectToRoute('admin_show_buildings');
+        }
+
+        return $this->render('admin/building/edit_buildings.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

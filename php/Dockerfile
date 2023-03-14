@@ -9,9 +9,19 @@ RUN apt-get update && apt-get install -y zlib1g-dev g++ git libicu-dev zip libzi
     && docker-php-ext-install zip \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug
+#    && pecl install php-redis
 
 RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
     apt-get install -y nodejs
+
+#RUN touch /etc/php/8.1/mods-available/phpredis.ini && \
+#    cd /etc/php/8.1/mods-available && \
+#    echo "extension=redis.so" >> phpredis.ini && \
+#    echo "session.save_handler" >> phpredis.ini && \
+#    echo "session.save_path = 'tcp://160.100.0.12:6379?timeout=3&read_timeout=3'" >> phpredis.ini && \
+#    ln -s /etc/php/8.1/mods-available/phpredis.ini /etc/php/8.1/cli/conf.d/phpredis.ini && \
+#    ln -s /etc/php/8.1/mods-available/phpredis.ini /etc/php/8.1/fpm/conf.d/phpredis.ini
+
 
 WORKDIR /var/www/project
 

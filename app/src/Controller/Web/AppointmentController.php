@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
+use App\Entity\Appointment;
+use App\Form\Web\AddAppointmentType;
 use App\Repository\AppointmentRepository;
+use App\Repository\ServiceRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,9 +19,15 @@ class AppointmentController extends AbstractController
 {
     private AppointmentRepository $appointmentRepository;
 
-    public function __construct(AppointmentRepository $appointmentRepository)
+    private UserRepository $userRepository;
+
+    private ServiceRepository $serviceRepository;
+
+    public function __construct(AppointmentRepository $appointmentRepository, UserRepository $userRepository, ServiceRepository $serviceRepository)
     {
         $this->appointmentRepository = $appointmentRepository;
+        $this->userRepository = $userRepository;
+        $this->serviceRepository = $serviceRepository;
     }
 
     #[Route(name: 'web_show_appointments', methods: ['GET'])]
@@ -37,5 +47,42 @@ class AppointmentController extends AbstractController
             'size' => $paginate['size'],
             'totalPages' => $totalPages,
         ]);
+    }
+
+    #[Route(path: '/medic/appointments', name: 'web_medic_appointments', methods: ['GET'])]
+    public function showAppointmentsByMedic(Request $request): Response
+    {
+        $paginate['page'] = (int)$request->query->get('page',1);
+        $paginate['size'] = (int)$request->query->get('size',10);
+
+        $appointments = $this
+            ->appointmentRepository
+            ->getPaginatedByMedic($paginate['page'], $paginate['size'], $this->getUser()->getId());
+        $totalPages = \ceil(\count($this->appointmentRepository->findAll()) / $paginate['size']);
+
+        return $this->render('web/appointment/show_medic_appointments_page.html.twig', [
+            'appointments' => $appointments,
+            'page' => $paginate['page'],
+            'size' => $paginate['size'],
+            'totalPages' => $totalPages,
+        ]);
+    }
+
+    #[Route(path: '/medics/{id}', name: 'web_add_appointment_by_medic', methods: ['GET', 'POST'])]
+    public function createAppointmentByDoctorId(Request $request): Response
+    {
+        $form = $this->createForm(AddAppointmentType::class);
+        $form->handleRequest($request);
+        $id = $request->get('id');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $appointment = $form->getData();
+            $appointment->setCustomer($this->getUser());
+            $appointment->setDoctor($this->userRepository->findOneBy(['id' => $id, 'role' => 'ROLE_MEDIC']));
+            $this->appointmentRepository->save($appointment);
+
+            return $this->redirectToRoute('web_show_appointments');
+        }
+
+        return $this->render('web/appointment/new_appointment.html.twig', ['form' => $form->createView()]);
     }
 }

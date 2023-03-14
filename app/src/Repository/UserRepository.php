@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -66,5 +69,25 @@ class UserRepository extends ServiceEntityRepository
             ->setMaxResults($limit)
             ->getQuery()
             ->execute();
+    }
+
+    public function getDoctorServices(int $id): Collection
+    {
+        return $this->findOneBy(['id' => $id])->getServices();
+    }
+
+    public function getDoctorSchedule(int $id, \DateTime $date): Collection
+    {
+        $schedules = $this->findOneBy(['id' => $id])->getSchedule();
+        $result = [];
+        foreach ($schedules as $schedule) {
+            foreach ($schedule->getDays() as $day) {
+                $result[] = [
+                    'startTime' => $day->getStartTime()->format('H:i'),
+                    'endTime' => $day->getEndTime()->format('H:i'),
+                    'date' => $day->getDate()->format('Y-m-d'),
+                ];
+            }
+        }
     }
 }

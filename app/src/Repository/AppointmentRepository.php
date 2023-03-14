@@ -6,10 +6,14 @@ use App\Entity\Appointment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-class AppointmentRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+/**
+ * @method Appointment|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Appointment|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Appointment[]    findAll()
+ * @method Appointment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class AppointmentRepository extends ServiceEntityRepository
 {
     private EntityManagerInterface $entityManager;
 
@@ -48,8 +52,26 @@ class AppointmentRepository extends ServiceEntityRepository implements PasswordU
             ->execute();
     }
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
+    public function save(Appointment $entity, bool $flush = true): void
     {
-        // TODO: Implement upgradePassword() method.
+        $this->entityManager->persist($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
+    public function getPaginatedByMedic(int $page, int $limit, int $medicId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('a')
+            ->from('App\Entity\Appointment', 'a')
+            ->where('a.doctor = :medicId')
+            ->groupBy('a.id')
+            ->setParameter('medicId', $medicId)
+            ->setFirstResult(($page * $limit) - $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AppointmentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
 #[ORM\Table(name: 'appointments')]
@@ -14,11 +15,9 @@ class Appointment
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $startTime;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTime $endTime;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'Please select the time interval')]
+    public ?string $timeInterval = '';
 
     // Many Appointment have one Customer.
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'appointments')]
@@ -28,40 +27,19 @@ class Appointment
     // Many Services have one Appointment.
     #[ORM\ManyToOne(targetEntity: Service::class)]
     #[ORM\JoinColumn(name: 'service_id', referencedColumnName: 'id')]
-    public Service $services;
+    public Service $service;
 
     // Many Appointment have one Doctor.
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id')]
     private User $doctor;
 
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $date;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getStartTime(): ?\DateTime
-    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(?\DateTime $startTime): self
-    {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    public function getEndTime(): ?\DateTime
-    {
-        return $this->endTime;
-    }
-
-    public function setEndTime(?\DateTime $endTime): self
-    {
-        $this->endTime = $endTime;
-
-        return $this;
     }
 
     public function getCustomer(): ?User
@@ -81,9 +59,9 @@ class Appointment
         return $this->services;
     }
 
-    public function setServices(?Service $services): self
+    public function setServices(?Service $service): self
     {
-        $this->services = $services;
+        $this->service = $service;
 
         return $this;
     }
@@ -96,6 +74,18 @@ class Appointment
     public function setDoctor(?User $doctor): self
     {
         $this->doctor = $doctor;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeImmutable $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
