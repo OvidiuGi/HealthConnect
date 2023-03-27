@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator as MyAssert;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: '`user`')]
@@ -34,30 +35,35 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
-    #[Assert\NotBlank(message: 'Please enter your first name')]
+    #[Assert\NotBlank(message: 'Please enter your first name', groups: ['create-user', 'edit-user'])]
+    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user'])]
     public string $firstName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
-    #[Assert\NotBlank(message: 'Please enter your last name')]
+    #[Assert\NotBlank(message: 'Please enter your last name', groups: ['create-user', 'edit-user'])]
+    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user'])]
     public string $lastName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\Email]
-    #[Assert\NotBlank(message: 'Please enter an email')]
+    #[Assert\Email(message:'Please enter a valid email', groups: ['create-user', 'edit-user', 'forgot-password'])]
+    #[Assert\NotBlank(message: 'Please enter an email', groups: ['create-user', 'forgot-password'])]
     public string $email = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
     public string $password = '';
 
-    #[Assert\NotBlank(message: 'Please enter a password', groups: ['create-user'])]
+    #[Assert\NotBlank(message: 'Please enter a password', groups: ['create-user', 'reset-password'])]
+    #[MyAssert\Password(groups: ['create-user', 'reset-password'])]
     public string $plainPassword = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank(message: 'Please enter your telephone number')]
+    #[Assert\NotBlank(message: 'Please enter your telephone number', groups: ['create-user', 'edit-user'])]
+    #[MyAssert\TelephoneNumber(groups: ['create-user', 'edit-user'])]
     public string $telephoneNr = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank(message: 'Please enter your CNP')]
+    #[Assert\NotBlank(message: 'Please enter your CNP', groups: ['create-user', 'edit-user'])]
+    #[MyAssert\Cnp(groups: ['create-user', 'edit-user'])]
     public string $cnp = '';
 
     // One User has Many Appointments.
@@ -70,7 +76,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     // Many Doctors work at One Building.
     #[ORM\ManyToOne(targetEntity: Building::class, inversedBy: 'doctors')]
-    #[ORM\JoinColumn(name: 'building_id', nullable: true)]
+    #[ORM\JoinColumn(name: 'building_id', nullable: true, onDelete: 'CASCADE')]
     private ?Building $office;
 
     // Many Doctors have Many Services.
@@ -86,6 +92,15 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     // One Doctor has Many Schedules.
     #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Schedule::class)]
     private ?Collection $schedules;
+
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true)]
+    public ?string $forgotPasswordToken = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $forgotPasswordTokenExpiresAt = null;
+
+    #[ORM\Column(type: 'boolean')]
+    public bool $isSubscribed = false;
 
     public function __construct()
     {
@@ -238,6 +253,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         $this->schedules->removeElement($schedule);
         $schedule->setDoctor(null);
+
+        return $this;
+    }
+
+    public function getForgotPasswordTokenExpiresAt(): ?\DateTimeImmutable
+    {
+        return $this->forgotPasswordTokenExpiresAt;
+    }
+
+    public function setForgotPasswordTokenExpiresAt(?\DateTimeImmutable $forgotPasswordTokenExpiresAt): self
+    {
+        $this->forgotPasswordTokenExpiresAt = $forgotPasswordTokenExpiresAt;
 
         return $this;
     }

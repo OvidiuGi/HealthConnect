@@ -21,7 +21,7 @@ class Appointment
 
     // Many Appointment have one Customer.
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'appointments')]
-    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'customer_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private User $customer;
 
     // Many Services have one Appointment.
@@ -31,23 +31,26 @@ class Appointment
 
     // Many Appointment have one Doctor.
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     private User $doctor;
 
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $date;
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    private \DateTimeImmutable $date;
+
+    #[ORM\Column(type: 'boolean', nullable: false)]
+    public bool $isCompleted = false;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCustomer(): ?User
+    public function getCustomer(): User
     {
         return $this->customer;
     }
 
-    public function setCustomer(?User $customer): self
+    public function setCustomer(User $customer): self
     {
         $this->customer = $customer;
 
@@ -56,34 +59,34 @@ class Appointment
 
     public function getServices(): ?Service
     {
-        return $this->services;
+        return $this->service;
     }
 
-    public function setServices(?Service $service): self
+    public function setServices(Service $service): self
     {
         $this->service = $service;
 
         return $this;
     }
 
-    public function getDoctor(): ?User
+    public function getDoctor(): User
     {
         return $this->doctor;
     }
 
-    public function setDoctor(?User $doctor): self
+    public function setDoctor(User $doctor): self
     {
         $this->doctor = $doctor;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(?\DateTimeImmutable $date): self
+    public function setDate(\DateTimeImmutable $date): self
     {
         $this->date = $date;
 

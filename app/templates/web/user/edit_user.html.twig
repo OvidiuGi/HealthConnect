@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="container">
-        {{ form_start(form, {method: 'POST'}) }}
+        {{ form_start(form) }}
         <h1 class="text-center">Edit Account</h1>
         <div class="form-floating">
             {{ form_widget(form.firstName, {attr: {class: 'form-control', placeholder: ''

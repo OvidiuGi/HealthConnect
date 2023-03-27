@@ -19,12 +19,27 @@
                 {% for schedule in schedules%}
                     <tr>
                         <td>{{schedule.id}}</td>
-                        <td>{{schedule.startDate.format('Y/m/d')}}</td>
-                        <td>{{schedule.endDate.format('Y/m/d')}}</td>
+                        <td>{{schedule.startDate.format('d/m/Y')}}</td>
+                        <td>{{schedule.endDate.format('d/m/Y')}}</td>
                         <td>
                             <div class="actionContainer">
                                 <a class="btn btn-sm btn-outline-secondary" href="{{path('web_show_schedules_by_id', {'id': schedule.id})}}"> View</a>
-                                <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actionContainer">
+                                <form
+                                        action="{{path('web_delete_schedule', {'id': schedule.id}) }}"
+                                        method="POST"
+                                        {{ stimulus_controller('submit-confirm', {
+                                            title: 'Remove this schedule?',
+                                            icon: 'warning',
+                                            confirmButtonText: 'Yes, remove it',
+                                        }) }}
+                                        data-action="submit-confirm#onSubmit"
+                                >
+                                    <button class="btn-close btn btn-sm btn-outline-secondary" aria-label="Close"></button>
+                                </form>
                             </div>
                         </td>
                     </tr>

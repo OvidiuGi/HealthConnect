@@ -6,21 +6,36 @@ use App\Repository\BuildingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[Route(path: '/')]
 class MainPageController extends AbstractController
 {
-    private BuildingRepository $buildingRepository;
-
-    public function __construct(BuildingRepository $buildingRepository)
-    {
-        $this->buildingRepository = $buildingRepository;
+    public function __construct(
+        private BuildingRepository $buildingRepository,
+        private CacheInterface $cache
+    ){
     }
 
     #[Route(path: '/', name: 'web_main_page', methods: ['GET'])]
     public function load(): Response
     {
-        return $this->render('web/main_page/main_page.html.twig');
+        if($this->isGranted('ROLE_USER')){
+            $cacheKey = 'main_page_'.$this->getUser()->getId();
+
+            return $this->cache->get($cacheKey, function (ItemInterface $item) {
+                $item->expiresAfter(43200);
+
+                return $this->render('web/main_page/main_page.html.twig');
+            });
+        }
+
+        return $this->cache->get('main_page', function (ItemInterface $item) {
+            $item->expiresAfter(43200);
+
+            return $this->render('web/main_page/main_page.html.twig');
+        });
     }
 
     #[Route(path: '/new-appointment', name: 'web_new_appointment', methods: ['GET'])]

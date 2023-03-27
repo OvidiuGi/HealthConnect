@@ -20,8 +20,8 @@ class Day
 
     // Many Days have one Schedule.
     #[ORM\ManyToOne(targetEntity: Schedule::class, inversedBy: 'days')]
-    #[ORM\JoinColumn(name: 'schedule_id', referencedColumnName: 'id')]
-    private ?Schedule $schedule;
+    #[ORM\JoinColumn(name: 'schedule_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private Schedule $schedule;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     private \DateTimeImmutable $startTime;
@@ -34,7 +34,7 @@ class Day
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): \DateTimeImmutable
     {
         return $this->date;
     }
@@ -46,19 +46,19 @@ class Day
         return $this;
     }
 
-    public function getSchedule(): ?Schedule
+    public function getSchedule(): Schedule
     {
         return $this->schedule;
     }
 
-    public function setSchedule(?Schedule $schedule): self
+    public function setSchedule(Schedule $schedule): self
     {
         $this->schedule = $schedule;
 
         return $this;
     }
 
-    public function getStartTime(): ?\DateTimeImmutable
+    public function getStartTime(): \DateTimeImmutable
     {
         return $this->startTime;
     }
@@ -70,7 +70,7 @@ class Day
         return $this;
     }
 
-    public function getEndTime(): ?\DateTimeImmutable
+    public function getEndTime(): \DateTimeImmutable
     {
         return $this->endTime;
     }

@@ -24,7 +24,7 @@ class DayController extends AbstractController
     }
 
     #[Route(path: '/add/{id}', name: 'web_add_day', methods: ['GET', 'POST'])]
-    public function addDay(int $id, Request $request): Response
+    public function add(int $id, Request $request): Response
     {
         $form = $this->createForm(AddDayType::class);
 
@@ -40,7 +40,7 @@ class DayController extends AbstractController
             $day->setEndTime($endTime);
             $day->setStartTime($startTime);
 
-            $day->setSchedule($this->scheduleRepository->findOneBy(['id' => $this->getUser()->getId()]));
+            $day->setSchedule($this->scheduleRepository->findOneBy(['id' => $id]));
 
             $this->dayRepository->save($day);
 
@@ -50,5 +50,21 @@ class DayController extends AbstractController
         return $this->render('web/day/add_day.html.twig', [
             'dayForm' => $form->createView(),
         ]);
+    }
+
+    #[Route(path: '/delete/{id}', name: 'web_delete_day', methods: ['GET', 'POST'])]
+    public function delete(int $id): Response
+    {
+        $day = $this->dayRepository->findOneBy(['id' => $id]);
+        if (null === $day) {
+            $this->addFlash('error','Day not found');
+
+            return $this->redirectToRoute('web_show_schedules');
+        }
+
+        $this->dayRepository->delete($day);
+        $this->addFlash('success','Day deleted successfully');
+
+        return $this->redirectToRoute('web_show_schedules');
     }
 }

@@ -38,7 +38,22 @@
                             <li><a href="{{ path('web_edit_user') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
                             {% endif %}
                             <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Change Password</a></li>
-                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Delete Account</a></li>
+                            <li>
+                                <div class="actionContainer">
+                                    <form
+                                            action="{{path('web_delete_user')}}"
+                                            method="POST"
+                                            {{ stimulus_controller('submit-confirm', {
+                                                title: 'This action will permanently delete your account. Are you sure?',
+                                                icon: 'warning',
+                                                confirmButtonText: 'Yes, remove it',
+                                            }) }}
+                                            data-action="submit-confirm#onSubmit"
+                                    >
+                                        <button class="dropdown-item d-flex gap-2 align-items-center">Delete Account</button>
+                                    </form>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 <a href="{{ path('web_logout') }}" class="btn btn-outline-light me-2">Logout</a>
@@ -55,6 +70,19 @@
     {% block body %} {% endblock %}
     {{ encore_entry_script_tags('jquery') }}
     {{ encore_entry_script_tags('new_appointment') }}
+    <div class="center-flash-message">
+        {%block flash_messages %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}.
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endblock %}
+    </div>
 </body>
 
 <footer>
@@ -69,16 +97,22 @@
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">About us</a></li>
                 </ul>
             </div>
+            {% if app.user %}
             <div class="col-md-4 offset-md-5 mb-1">
-                <form>
-                    <h5>Subscribe to our newsletter</h5>
-                    <div class="d-flex w-100 gap-2">
-                        <label for="newsletter1" class="visually-hidden">Email address</label>
-                        <input type="text" class="form-control" id="newsletter1" placeholder="Email address">
-                        <button class="btn btn-outline-dark" type="button">Subscribe</button>
-                    </div>
+                <form
+                    action="{{ path('web_subscribe_newsletter') }}"
+                    method="POST"
+                    {{ stimulus_controller('submit-confirm', {
+                        title: 'Thank you for subscribing to our newsletter!',
+                        icon: 'success',
+                        confirmButtonText: 'Confirm',
+                    }) }}
+                    data-action="submit-confirm#onSubmit"
+                >
+                    <button class="btn btn-sm btn-outline-dark">Subscribe to our newsletter</button>
                 </form>
             </div>
+            {% endif %}
         </div>
     </div>
 </footer>

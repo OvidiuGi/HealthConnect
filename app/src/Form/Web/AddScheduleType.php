@@ -12,8 +12,12 @@ class AddScheduleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startDate', DateType::class)
-            ->add('endDate', DateType::class);
+        $builder->add('startDate', DateType::class, [
+            'input' => 'datetime_immutable'
+        ])
+            ->add('endDate', DateType::class, [
+                'input' => 'datetime_immutable'
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

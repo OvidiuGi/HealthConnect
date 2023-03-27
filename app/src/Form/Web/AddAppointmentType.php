@@ -4,6 +4,7 @@ namespace App\Form\Web;
 
 use App\Entity\Appointment;
 use App\Entity\Service;
+use App\Repository\AppointmentRepository;
 use App\Repository\DayRepository;
 use App\Repository\ScheduleRepository;
 use App\Repository\ServiceRepository;
@@ -11,6 +12,7 @@ use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -29,18 +31,22 @@ class AddAppointmentType extends AbstractType
 
     private ServiceRepository $serviceRepository;
 
+    private AppointmentRepository $appointmentRepository;
+
     public function __construct(
         UserRepository $userRepository,
         DayRepository $dayRepository,
         RequestStack $requestStack,
         ScheduleRepository $scheduleRepository,
-        ServiceRepository $serviceRepository
+        ServiceRepository $serviceRepository,
+        AppointmentRepository $appointmentRepository
     ) {
         $this->userRepository = $userRepository;
         $this->dayRepository = $dayRepository;
         $this->requestStack = $requestStack;
         $this->scheduleRepository = $scheduleRepository;
         $this->serviceRepository = $serviceRepository;
+        $this->appointmentRepository = $appointmentRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,7 +64,7 @@ class AddAppointmentType extends AbstractType
             ->add('date', ChoiceType::class, [
                 'placeholder' => 'Choose a date',
                 'choices' => $this->scheduleRepository->getDoctorDays($currentRequest->get('id')),
-                'choice_label' => function(\DateTime $day) {
+                'choice_label' => function(\DateTimeImmutable $day) {
                     return $day->format('Y-m-d');
                 },
                 'mapped' => false
@@ -85,16 +91,37 @@ class AddAppointmentType extends AbstractType
         ]);
     }
 
-    private function getIntervalsByServiceId(\DateTime $date,int $duration): array
+    private function getIntervalsByServiceId(\DateTimeImmutable $date,int $duration): array
     {
         $day = $this->dayRepository->findOneBy(['date' => $date]);
         $result = [];
-        while($day->getStartTime() < $day->getEndTime()) {
-            $oldStartTime = $day->getStartTime()->format('H:i');
-            $startTime = $day->getStartTime();
-            $day->setStartTime(date_add($startTime, date_interval_create_from_date_string($duration . ' minutes')));
-            $result[] = [$oldStartTime. '-'. $day->getStartTime()->format('H:i') ];
+        $startTime = $day->getStartTime();
+
+        while($startTime < $day->getEndTime()) {
+            $oldStartTime = $startTime;
+            $startTime = \DateTimeImmutable::createFromMutable(date_add(\DateTime::createFromImmutable($startTime), date_interval_create_from_date_string($duration . ' minutes')));
+            if (!$this->isIntervalBusy($date,$oldStartTime, $startTime)) {
+                $result[] = [$oldStartTime->format('H:i'). '-'. $startTime->format('H:i') ];
+            }
+
         }
+
         return $result;
+    }
+
+    public function isIntervalBusy(\DateTimeImmutable $date, \DateTimeImmutable $oldStartTime, \DateTimeImmutable $startTime): bool
+    {
+        $busyIntervals = $this->appointmentRepository->getAppointmentsIntervalByDate($date);
+        foreach ($busyIntervals as $busyInterval) {
+            $busyInterval = explode('-', $busyInterval['timeInterval']);
+
+            if ($oldStartTime->format('H:i') >= $busyInterval[0] && $oldStartTime->format('H:i') < $busyInterval[1]) {
+                return true;
+            }
+            if ($startTime->format('H:i') >= $busyInterval[0] && $startTime->format('H:i') < $busyInterval[1]) {
+                return true;
+            }
+        }
+        return false;
     }
 }

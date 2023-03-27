@@ -4,8 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Schedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -34,6 +32,14 @@ class ScheduleRepository extends ServiceEntityRepository
         }
     }
 
+    public function delete(Schedule $entity, bool $flush = true): void
+    {
+        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
     public function getDoctorDays(int $doctorId): array
     {
         return $this->entityManager
@@ -51,24 +57,35 @@ class ScheduleRepository extends ServiceEntityRepository
     public function getAvailableDates(int $scheduleId): array
     {
         $schedule = $this->findOneBy(['id' => $scheduleId]);
-
         $result = [];
         $currentDay = $schedule->getStartDate();
 
         while ($currentDay <= $schedule->getEndDate()) {
-            foreach ($schedule->getDays() as $day) {
-                if ($day->getDate()->format('Y-m-d') !== $schedule->getStartDate()->format('Y-m-d')) {
-                    $result[] = $schedule->getStartDate();
-                }
-            }
             if ($schedule->getDays()->count() === 0) {
+                $result[] = $currentDay;
+            } else if ($this->isDayAvailable($schedule, $currentDay)) {
                 $result[] = $currentDay;
             }
 
             $currentDay = $currentDay->modify('+1 day');
-//            $schedule->setStartDate($schedule->getStartDate()->modify('+1 day'));
         }
 
         return $result;
+    }
+
+    public function isDayAvailable(Schedule $schedule, \DateTimeImmutable $date): bool
+    {
+        foreach ($schedule->getDays() as $day) {
+            if ($day->getDate()->format('Y-m-d') === $date->format('Y-m-d')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public function getPossibleDaysNumber(int $id): int
+    {
+        $schedule = $this->findOneBy(['id' => $id]);
+        return $schedule->getStartDate()->diff($schedule->getEndDate())->days+1;
     }
 }

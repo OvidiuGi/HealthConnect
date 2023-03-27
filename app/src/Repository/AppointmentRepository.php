@@ -60,6 +60,14 @@ class AppointmentRepository extends ServiceEntityRepository
         }
     }
 
+    public function delete(Appointment $entity, bool $flush = true): void
+    {
+        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
     public function getPaginatedByMedic(int $page, int $limit, int $medicId): array
     {
         return $this->entityManager
@@ -71,6 +79,18 @@ class AppointmentRepository extends ServiceEntityRepository
             ->setParameter('medicId', $medicId)
             ->setFirstResult(($page * $limit) - $limit)
             ->setMaxResults($limit)
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getAppointmentsIntervalByDate(\DateTimeImmutable $date)
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('a.timeInterval')
+            ->from('App\Entity\Appointment', 'a')
+            ->where('a.date = :date')
+            ->setParameter('date', $date)
             ->getQuery()
             ->execute();
     }

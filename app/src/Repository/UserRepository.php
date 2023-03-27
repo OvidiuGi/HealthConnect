@@ -76,18 +76,11 @@ class UserRepository extends ServiceEntityRepository
         return $this->findOneBy(['id' => $id])->getServices();
     }
 
-    public function getDoctorSchedule(int $id, \DateTime $date): Collection
+    public function delete(User $entity, bool $flush = true): void
     {
-        $schedules = $this->findOneBy(['id' => $id])->getSchedule();
-        $result = [];
-        foreach ($schedules as $schedule) {
-            foreach ($schedule->getDays() as $day) {
-                $result[] = [
-                    'startTime' => $day->getStartTime()->format('H:i'),
-                    'endTime' => $day->getEndTime()->format('H:i'),
-                    'date' => $day->getDate()->format('Y-m-d'),
-                ];
-            }
+        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->entityManager->flush();
         }
     }
 }

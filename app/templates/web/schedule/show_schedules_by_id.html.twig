@@ -1,13 +1,12 @@
 {% extends 'web/base.html.twig' %}
 
 {% block body %}
-    {% set daysCount = 0 %}
     <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-bottom">
-            <h1 class="h2">Schedules</h1>
-{#            {% if date_diff(schedule.getStartDate,schedule.getEndDate).d != daysCount %}#}
+            <h1 class="h2">Days</h1>
+            {% if possibleDaysNumber > daysNumber %}
                 <a class="btn btn-sm btn-outline-secondary" href="{{ path('web_add_day', {'id': schedule.id}) }}"> Add Day</a>
-{#            {% endif %}#}
+            {% endif %}
         </div>
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 table-responsive">
             <table class="table table-striped table-sm align-items-center">
@@ -20,16 +19,29 @@
                 </thead>
                 <tbody>
                 {% for day in schedule.days%}
-                    {% set daysCount = daysCount + 1 %}
                     <tr>
-                        <td>{{day.date.format('l')}}</td>
+                        <td>{{day.date.format('d/m/Y')}}</td>
                         <td>{{day.startTime.format('H:i')}}</td>
                         <td>{{day.endTime.format('H:i')}}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> View</a>
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> Edit</a>
-                                <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
+                                <a class="btn btn-sm btn-outline-secondary" href="#"> Add Break</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <form
+                                    action="{{path('web_delete_day', {'id': day.id}) }}"
+                                    method="POST"
+                                    {{ stimulus_controller('submit-confirm', {
+                                        title: 'Remove this day?',
+                                        icon: 'warning',
+                                        confirmButtonText: 'Yes, remove it',
+                                    }) }}
+                                    data-action="submit-confirm#onSubmit"
+                                >
+                                    <button class="btn-close btn btn-sm btn-outline-secondary" aria-label="Close"></button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -38,17 +50,17 @@
             </table>
         </div>
     </main>
-    {#    <nav aria-label="Pagination">#}
-    {#        <ul class="pagination justify-content-center">#}
-    {#            <li class="page-item">#}
-    {#                <a href="#" class="nav-link text-secondary page-link">Previous</a>#}
-    {#            </li>#}
-    {#            {% for i in 1..totalPages%}#}
-    {#                <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('web_show_appointments') }}?page={{i}}">{{i}}</a></li>#}
-    {#            {%endfor%}#}
-    {#            <li class="page-item">#}
-    {#                <a href="#" class="nav-link text-secondary page-link">Next</a>#}
-    {#            </li>#}
-    {#        </ul>#}
-    {#    </nav>#}
+{#        <nav aria-label="Pagination">#}
+{#            <ul class="pagination justify-content-center">#}
+{#                <li class="page-item">#}
+{#                    <a href="#" class="nav-link text-secondary page-link">Previous</a>#}
+{#                </li>#}
+{#                {% for i in 1..totalPages%}#}
+{#                    <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('web_show_appointments') }}?page={{i}}">{{i}}</a></li>#}
+{#                {%endfor%}#}
+{#                <li class="page-item">#}
+{#                    <a href="#" class="nav-link text-secondary page-link">Next</a>#}
+{#                </li>#}
+{#            </ul>#}
+{#        </nav>#}
 {% endblock %}

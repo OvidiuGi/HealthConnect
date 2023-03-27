@@ -71,3 +71,25 @@ services:
     networks:
       licenta-nginx-php-mysql:
         ipv4_address: 160.100.0.12
+
+  licenta-mailer-service:
+    image: schickling/mailcatcher
+    container_name: licenta-mailcatcher-container
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      licenta-nginx-php-mysql:
+        ipv4_address: 160.100.0.11
+
+  licenta-rabbitmq-service:
+    image: rabbitmq:3.9-management
+    container_name: licenta-rabbitmq-container
+    depends_on:
+      - licenta-php-service
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+        licenta-nginx-php-mysql:
+            ipv4_address: 160.100.0.10

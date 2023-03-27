@@ -12,13 +12,27 @@
             <input type="password" class="form-control" name="_password">
             <label for="floatingInput">Password</label>
         </div>
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me" checked> Remember me
-            </label>
-        </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     </form>
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="_remember_me" checked> Remember me
+        </label>
+    </div>
+    <div {{ stimulus_controller('modal-form', {
+        formUrl: path('forgot_password')
+    }) }} class="checkbox mb-3">
+        <label>
+            <a
+                    href="#"
+                    data-action="modal-form#openModal"
+            >Forgot password?</a>
+            {{ include('_modal.html.twig', {
+                modalTitle: 'Forgot password?',
+                modalSubmit: 'Send reset link',
+            }) }}
+        </label>
+    </div>
     {% if error %}
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}

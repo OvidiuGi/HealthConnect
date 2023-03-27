@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 
 class AddDayType extends AbstractType
 {
@@ -42,6 +43,10 @@ class AddDayType extends AbstractType
             ->add('endTime', TimeType::class, [
                 'input' => 'datetime_immutable',
                 'widget' => 'choice',
+                'constraints' => new GreaterThan([
+                    'propertyPath' => 'parent.data.startTime',
+                    'message' => 'End time must be greater than start time'
+                ])
             ]);
     }
 

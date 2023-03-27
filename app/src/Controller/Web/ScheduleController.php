@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
-use App\Entity\User;
 use App\Form\Web\AddScheduleType;
 use App\Repository\ScheduleRepository;
 use App\Repository\UserRepository;
@@ -35,8 +34,16 @@ class ScheduleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $schedule = $form->getData();
-
             $schedule->setDoctor($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
+            if ($this->scheduleRepository->findBy([
+                'doctor' => $this->getUser(),
+                'startDate' => $schedule->getStartDate(),
+                'endDate' => $schedule->getEndDate()
+            ])) {
+                $this->addFlash('error', 'You already have a schedule for this dates');
+
+                return $this->redirectToRoute('web_show_schedules');
+            }
 
             $this->scheduleRepository->save($schedule);
 
@@ -61,6 +68,24 @@ class ScheduleController extends AbstractController
     {
         return $this->render('web/schedule/show_schedules_by_id.html.twig', [
             'schedule' => $this->scheduleRepository->findOneBy(['id' => $id]),
+            'daysNumber' => $this->scheduleRepository->findOneBy(['id' => $id])->getDays()->count(),
+            'possibleDaysNumber' => $this->scheduleRepository->getPossibleDaysNumber($id)
         ]);
+    }
+
+    #[Route(path: '/delete/{id}', name: 'web_delete_schedule', methods: ['GET', 'POST'])]
+    public function delete(int $id): Response
+    {
+        $schedule = $this->scheduleRepository->findOneBy(['id' => $id]);
+        if (null === $schedule) {
+            $this->addFlash('error','Schedule not found');
+
+            return $this->redirectToRoute('web_show_schedules');
+        }
+
+        $this->scheduleRepository->delete($schedule);
+        $this->addFlash('success','Schedule deleted successfully');
+
+        return $this->redirectToRoute('web_show_schedules');
     }
 }

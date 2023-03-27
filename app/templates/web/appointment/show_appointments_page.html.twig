@@ -14,8 +14,10 @@
                     <th scope="col">Doctor</th>
                     <th scope="col">City</th>
                     <th scope="col">Address</th>
+                    <th scope="col">Date</th>
                     <th scope="col">Time Interval</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Completed</th>
+                    <th scope="col">Cancel</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,11 +28,23 @@
                         <td><a class="nav-link text-secondary" href="#">{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</a></td>
                         <td>{{ appointment.doctor.office.city }}</td>
                         <td>{{ appointment.doctor.office.address }}</td>
+                        <td>{{ appointment.date.format('d/m/Y') }}</td>
                         <td>{{ appointment.timeInterval }}</td>
+                        <td>{{ appointment.isCompleted ? 'Yes' : 'No' }}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> Edit</a>
-                                <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
+                                <form
+                                    action="{{ path('web_delete_appointment', {'id': appointment.id}) }}"
+                                    method="POST"
+                                    {{ stimulus_controller('submit-confirm', {
+                                        title: 'Remove this appointment?',
+                                        icon: 'warning',
+                                        confirmButtonText: 'Yes, remove it',
+                                    }) }}
+                                    data-action="submit-confirm#onSubmit"
+                                >
+                                    <button class="btn-close btn btn-sm btn-outline-secondary" aria-label="Close"></button>
+                                </form>
                             </div>
                         </td>
                     </tr>

@@ -20,8 +20,8 @@ class Schedule
 
     // One Doctor has many Schedules.
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'schedules')]
-    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id')]
-    private ?User $doctor;
+    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private User $doctor;
 
     // One Schedule has many Days.
     #[ORM\OneToMany(mappedBy: 'schedule', targetEntity: Day::class)]
@@ -43,12 +43,12 @@ class Schedule
         return $this->id;
     }
 
-    public function getDoctor(): ?User
+    public function getDoctor(): User
     {
         return $this->doctor;
     }
 
-    public function setDoctor(?User $doctor): self
+    public function setDoctor(User $doctor): self
     {
         $this->doctor = $doctor;
 

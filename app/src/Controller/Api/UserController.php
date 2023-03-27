@@ -38,10 +38,4 @@ class UserController extends AbstractController
 
         return new JsonResponse(['message' => 'User created'], Response::HTTP_CREATED);
     }
-
-    #[Route(name: 'test', methods:['GET'])]
-    public function test(): Response
-    {
-        return $this->render('base.html.twig',[]);
-    }
 }

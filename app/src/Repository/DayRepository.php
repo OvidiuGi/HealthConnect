@@ -41,4 +41,12 @@ class DayRepository extends ServiceEntityRepository
             $this->entityManager->flush();
         }
     }
+
+    public function delete(Day $entity, bool $flush = true): void
+    {
+        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
 }

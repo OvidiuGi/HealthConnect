@@ -1,0 +1,24 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block main %}
+
+    <div class="container">
+        {{ form_start(form, {method: 'POST'}) }}
+        <h1 class="text-center">Newsletter</h1>
+        <div class="form-floating">
+            {{ form_widget(form.subject, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.subject, 'Subject', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.subject) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.content, {attr: {placeholder: ''
+            }}) }}
+            {{ form_label(form.content, 'Content', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.content) }}
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}
