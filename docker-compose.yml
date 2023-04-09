@@ -1,7 +1,7 @@
 version: "3.7"
 
 networks:
-  licenta-nginx-php-mysql:
+  licenta:
     driver: bridge
     ipam:
       config:
@@ -18,13 +18,13 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./app:/var/www/project
+      - ./app:/var/www/app
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - licenta-php-service
       - licenta-mysql-service
     networks:
-      licenta-nginx-php-mysql:
+      licenta:
         ipv4_address: 160.100.0.5
 
   licenta-php-service:
@@ -38,10 +38,10 @@ services:
     environment:
         PHP_IDE_CONFIG: serverName=licenta.local
     volumes:
-      - ./app:/var/www/project
+      - ./app:/var/www/app
       - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     networks:
-      licenta-nginx-php-mysql:
+      licenta:
         ipv4_address: 160.100.0.6
 
   licenta-mysql-service:
@@ -59,7 +59,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: parola123
     networks:
-      licenta-nginx-php-mysql:
+      licenta:
         ipv4_address: 160.100.0.7
 
   licenta-redis-service:
@@ -69,7 +69,7 @@ services:
       - "6379:6379"
     restart: unless-stopped
     networks:
-      licenta-nginx-php-mysql:
+      licenta:
         ipv4_address: 160.100.0.12
 
   licenta-mailer-service:
@@ -79,7 +79,7 @@ services:
       - "1080:1080"
       - "1025:1025"
     networks:
-      licenta-nginx-php-mysql:
+      licenta:
         ipv4_address: 160.100.0.11
 
   licenta-rabbitmq-service:
@@ -91,5 +91,31 @@ services:
       - "5672:5672"
       - "15672:15672"
     networks:
-        licenta-nginx-php-mysql:
+        licenta:
             ipv4_address: 160.100.0.10
+
+  licenta-supervisor-service:
+    image: licenta-supervisor-image
+    build:
+      context: .
+      dockerfile: ./supervisor/Dockerfile
+    container_name: licenta-supervisor-container
+    depends_on:
+      - licenta-php-service
+      - licenta-redis-service
+      - licenta-mailer-service
+      - licenta-rabbitmq-service
+    links:
+        - licenta-php-service
+        - licenta-redis-service
+        - licenta-mailer-service
+        - licenta-rabbitmq-service
+    volumes:
+        - ./:/var/www/
+        - ./supervisor/supervisord.conf/:/etc/supervisor/conf.d/supervisord.conf
+        - ./supervisor/crontab:/etc/crontab
+        - ./log:/var/log/supervisor/log
+    restart: unless-stopped
+    networks:
+        licenta:
+            ipv4_address: 160.100.0.4

@@ -24,7 +24,7 @@
             </ul>
             <div class="text-end">
                 {% if app.user %}
-                <a href="{{ path('web_new_appointment') }}" class="btn btn-outline-light me-2">New Appointment</a>
+                <a href="{{ path('web_browse_hospitals') }}" class="btn btn-outline-light me-2">New Appointment</a>
                     <div class="btn me-2 dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">My Account
                             <span class="caret"></span></button>
@@ -32,12 +32,11 @@
                             {% if is_granted('ROLE_MEDIC') %}
                             <li><a href="{{path('web_medic_appointments')}}" class="dropdown-item d-flex gap-2 align-items-center">Appointments</a></li>
                             <li><a href="{{path('web_show_schedules')}}" class="dropdown-item d-flex gap-2 align-items-center">Edit Schedule</a></li>
-                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Edit Services</a></li>
-                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
+                            <li><a href="{{ path('web_show_services') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Services</a></li>
+                            <li><a href="{{ path('web_edit_medic') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
                             {% else %}
                             <li><a href="{{ path('web_edit_user') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
                             {% endif %}
-                            <li><a href="#" class="dropdown-item d-flex gap-2 align-items-center">Change Password</a></li>
                             <li>
                                 <div class="actionContainer">
                                     <form
@@ -97,7 +96,7 @@
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">About us</a></li>
                 </ul>
             </div>
-            {% if app.user %}
+            {% if app.user and app.user.isSubscribed == false %}
             <div class="col-md-4 offset-md-5 mb-1">
                 <form
                     action="{{ path('web_subscribe_newsletter') }}"

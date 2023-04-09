@@ -1,0 +1,19 @@
+{% extends 'form/base.form.html.twig' %}
+{% block title %} Welcome! {% endblock %}
+{% block body %}
+    {{ form_start(form, {method: 'POST'}) }}
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <h1>Add Break</h1>
+    {{ form_label(form.date, 'Date', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(form.date, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(form.date) }}
+
+    {{ form_label(form.timeInterval, 'Time Interval', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(form.timeInterval, {attr: {class: 'form-control', placeholder: 'Use this format: xx:xx-xx:xx'
+    }}) }}
+    {{ form_errors(form.timeInterval) }}
+
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'web/base.html.twig' %}
+
+{% block body %}
+    <main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-bottom">
+            <h1 class="h2">The breaks on {{ date }} </h1>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 table-responsive">
+            <table class="table table-striped table-sm align-items-center">
+                <thead>
+                <tr>
+                    <th scope="col">Time Interval</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for break in breaks%}
+                    <tr>
+                        <td>{{break.timeInterval}}</td>
+                        <td>
+                            <div class="actionContainer">
+                                <form
+                                        action="{{path('web_delete_break', {'id': break.id}) }}"
+                                        method="POST"
+                                        {{ stimulus_controller('submit-confirm', {
+                                            title: 'Remove this break?',
+                                            icon: 'warning',
+                                            confirmButtonText: 'Yes, remove it',
+                                        }) }}
+                                        data-action="submit-confirm#onSubmit"
+                                >
+                                    <button class="btn-close btn btn-sm btn-outline-secondary" aria-label="Close"></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+    {#    <nav aria-label="Pagination">#}
+    {#        <ul class="pagination justify-content-center">#}
+    {#            <li class="page-item">#}
+    {#                <a href="#" class="nav-link text-secondary page-link">Previous</a>#}
+    {#            </li>#}
+    {#            {% for i in 1..totalPages%}#}
+    {#                <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('web_show_appointments') }}?page={{i}}">{{i}}</a></li>#}
+    {#            {%endfor%}#}
+    {#            <li class="page-item">#}
+    {#                <a href="#" class="nav-link text-secondary page-link">Next</a>#}
+    {#            </li>#}
+    {#        </ul>#}
+    {#    </nav>#}
+{% endblock %}

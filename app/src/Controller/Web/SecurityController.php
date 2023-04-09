@@ -19,10 +19,8 @@ class SecurityController extends AbstractController
 {
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
-        private UserRepository $userRepository,
-        private ValidatorInterface $validator
+        private UserRepository $userRepository
     ) {
-
     }
 
     #[Route(path: '/login', name: 'web_login', methods: ['GET','POST'])]

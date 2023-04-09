@@ -35,18 +35,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private int $id;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
-    #[Assert\NotBlank(message: 'Please enter your first name', groups: ['create-user', 'edit-user'])]
-    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user'])]
+    #[Assert\NotBlank(message: 'Please enter your first name', groups: ['create-user', 'edit-user', 'edit-medic'])]
+    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $firstName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
-    #[Assert\NotBlank(message: 'Please enter your last name', groups: ['create-user', 'edit-user'])]
-    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user'])]
+    #[Assert\NotBlank(message: 'Please enter your last name', groups: ['create-user', 'edit-user', 'edit-medic'])]
+    #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $lastName = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\Email(message:'Please enter a valid email', groups: ['create-user', 'edit-user', 'forgot-password'])]
-    #[Assert\NotBlank(message: 'Please enter an email', groups: ['create-user', 'forgot-password'])]
+    #[Assert\Email(message:'Please enter a valid email', groups: ['create-user', 'edit-user', 'forgot-password', 'edit-medic'])]
+    #[Assert\NotBlank(message: 'Please enter an email', groups: ['create-user', 'forgot-password', 'edit-medic'])]
     public string $email = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
@@ -57,13 +57,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public string $plainPassword = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank(message: 'Please enter your telephone number', groups: ['create-user', 'edit-user'])]
-    #[MyAssert\TelephoneNumber(groups: ['create-user', 'edit-user'])]
+    #[Assert\NotBlank(message: 'Please enter your telephone number', groups: ['create-user', 'edit-user', 'edit-medic'])]
+    #[MyAssert\TelephoneNumber(groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $telephoneNr = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank(message: 'Please enter your CNP', groups: ['create-user', 'edit-user'])]
-    #[MyAssert\Cnp(groups: ['create-user', 'edit-user'])]
+    #[Assert\NotBlank(message: 'Please enter your CNP', groups: ['create-user', 'edit-user', 'edit-medic'])]
+    #[MyAssert\Cnp(groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $cnp = '';
 
     // One User has Many Appointments.
@@ -79,14 +79,16 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\JoinColumn(name: 'building_id', nullable: true, onDelete: 'CASCADE')]
     private ?Building $office;
 
-    // Many Doctors have Many Services.
-    #[ORM\ManyToMany(targetEntity: Service::class, mappedBy: 'doctors')]
+    // One Doctor has Many Services.
+    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Service::class)]
     private Collection $services;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[Assert\NotBlank(message: 'Please enter your specialization', groups: ['edit-medic'])]
     public ?string $specialization = '';
 
     #[ORM\Column(type: 'integer', length: 256, unique: false)]
+    #[Assert\GreaterThanOrEqual(value: 0, groups: ['edit-medic'])]
     public ?int $experience = 0;
 
     // One Doctor has Many Schedules.

@@ -1,0 +1,187 @@
+
+                                                           
+  Command "app:delete-past-due-schedules" is not defined.  
+                                                           
+  Did you mean one of these?                               
+      app:delete-past-due-date-schedules                   
+      app:mark-completed-appointments                      
+      app:send-email-reminder                              
+                                                           
+
+2023-04-09T18:49:51+00:00 [info] User Deprecated: The "Symfony\Component\Console\Command\Command::$defaultName" property is considered final. You should not override it in "App\Command\DeletePastDueDateSchedulesCommand".
+2023-04-09T18:49:51+00:00 [info] User Deprecated: The "Symfony\Component\Console\Command\Command::$defaultDescription" property is considered final. You should not override it in "App\Command\DeletePastDueDateSchedulesCommand".
+
+ [OK] Succesfully deleted past due schedules.                                                                           
+
+
+ [OK] Succesfully deleted past due schedules.                                                                           
+
+
+ [OK] Succesfully deleted past due schedules.                                                                           
+
+Sun Apr  9 19:02:13 UTC 2023
+
+ [OK] Succesfully deleted past due schedules.                                                                           
+
+Sun Apr  9 19:52:01 UTC 2023
+Sun Apr  9 19:52:01 UTC 2023
+Sun Apr  9 19:52:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 19:53:01 UTC 2023
+Sun Apr  9 19:53:01 UTC 2023
+Sun Apr  9 19:53:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 19:53:11 UTC 2023
+Could not open input file: ./bin/console
+Sun Apr  9 19:53:26 UTC 2023
+Could not open input file: bin/console
+Sun Apr  9 19:54:01 UTC 2023
+Sun Apr  9 19:54:01 UTC 2023
+Sun Apr  9 19:54:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 19:55:01 UTC 2023
+Sun Apr  9 19:55:01 UTC 2023
+Sun Apr  9 19:55:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 19:57:01 UTC 2023
+Sun Apr  9 19:57:01 UTC 2023
+Sun Apr  9 19:57:01 UTC 2023
+/bin/bash: line 1: bin/console: No such file or directory
+/bin/bash: line 1: bin/console: No such file or directory
+/bin/bash: line 1: bin/console: No such file or directory
+Sun Apr  9 19:59:01 UTC 2023
+Sun Apr  9 19:59:01 UTC 2023
+Sun Apr  9 19:59:01 UTC 2023
+/bin/sh: 1: /bin/sh: 1: bin/console: not found
+bin/console: not found
+/bin/sh: 1: bin/console: not found
+Sun Apr  9 20:00:01 UTC 2023
+Sun Apr  9 20:00:01 UTC 2023
+Sun Apr  9 20:00:01 UTC 2023
+/bin/bash: line 1: bin/console: No such file or directory
+/bin/bash: line 1: /var/www/app: Is a directory
+/bin/bash: line 1: /var/www/app: Is a directory
+Sun Apr  9 20:01:01 UTC 2023
+Sun Apr  9 20:01:01 UTC 2023
+Sun Apr  9 20:01:01 UTC 2023
+/bin/bash: line 1: /var/www/app: Is a directory
+/bin/bash: line 1: bin/console: No such file or directory
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:02:01 UTC 2023
+Sun Apr  9 20:02:01 UTC 2023
+Sun Apr  9 20:02:01 UTC 2023
+/bin/bash: line 1: bin/console: No such file or directory
+/bin/bash: line 1: /var/www/app: Is a directory
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:03:01 UTC 2023
+Sun Apr  9 20:03:01 UTC 2023
+Sun Apr  9 20:03:01 UTC 2023
+/bin/bash: line 1: bin/console: No such file or directory
+/bin/bash: line 1: /var/www/app: Is a directory
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:04:01 UTC 2023
+Sun Apr  9 20:04:01 UTC 2023
+/bin/sh: 1: bin/console: not found
+/bin/sh: 1: /var/www/app: Permission denied
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:05:01 UTC 2023
+/bin/sh: 1: bin/console: not found
+Sun Apr  9 20:05:01 UTC 2023
+/bin/sh: 1: /var/www/app: Permission denied
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:06:01 UTC 2023
+Sun Apr  9 20:06:01 UTC 2023
+/bin/sh: 1: bin/console: not found
+/bin/sh: 1: /var/www/app: Permission denied
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:07:01 UTC 2023
+Sun Apr  9 20:07:01 UTC 2023
+/bin/sh: 1: bin/console: not found
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:08:01 UTC 2023
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:09:01 UTC 2023
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:09:49 UTC 2023
+Could not open input file: ./bin/console
+Sun Apr  9 20:10:01 UTC 2023
+Sun Apr  9 20:10:01 UTC 2023
+Sun Apr  9 20:10:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 20:11:01 UTC 2023
+Sun Apr  9 20:11:01 UTC 2023
+Sun Apr  9 20:11:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 20:11:31 UTC 2023
+
+ [OK] Succesfully deleted past due schedules.                                                                           
+
+Sun Apr  9 20:15:01 UTC 2023
+Sun Apr  9 20:15:01 UTC 2023
+Sun Apr  9 20:15:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Sun Apr  9 20:16:01 UTC 2023
+Sun Apr  9 20:16:01 UTC 2023
+Sun Apr  9 20:16:01 UTC 2023
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+Could not open input file: ./bin/console
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+/usr/bin/env: 'php': No such file or directory
+Sun Apr  9 20:25:01 UTC 2023
+Sun Apr  9 20:25:01 UTC 2023
+Sun Apr  9 20:25:01 UTC 2023
+
+ [OK] Succesfully deleted past due schedules.                                   
+
+
+ [OK] Appointments marked as completed successfully!                            
+
+
+ [OK] Reminders sent successfully!                                              
+
+Sun Apr  9 20:26:01 UTC 2023
+Sun Apr  9 20:26:01 UTC 2023
+Sun Apr  9 20:26:01 UTC 2023
+
+
+ [OK] Appointments marked as completed successfully!                            
+
+ [OK] Succesfully deleted past due schedules.                                   
+
+
+ [OK] Reminders sent successfully!                                              
+
+Sun Apr  9 20:27:01 UTC 2023
+Sun Apr  9 20:27:01 UTC 2023
+Sun Apr  9 20:27:01 UTC 2023
+
+
+ [OK] Succesfully deleted past due schedules.                                   
+
+ [OK] Appointments marked as completed successfully!                            
+
+
+ [OK] Reminders sent successfully!                                              
+

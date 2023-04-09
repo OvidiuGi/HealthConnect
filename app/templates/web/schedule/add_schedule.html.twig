@@ -2,30 +2,17 @@
 {% block title %} Welcome! {% endblock %}
 {% block body %}
     {{ form_start(scheduleForm, {method: 'POST'}) }}
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
     <h1>Add Schedule</h1>
-        {{ form_label(scheduleForm.startDate, 'Start Date', {label_attr: {class: 'form-label'}}) }}
-        {{ form_widget(scheduleForm.startDate, {attr: {class: 'form-control', placeholder: ''
-        }}) }}
-        {{ form_errors(scheduleForm.startDate) }}
+    {{ form_label(scheduleForm.startDate, 'Start Date', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(scheduleForm.startDate, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(scheduleForm.startDate) }}
 
-        {{ form_label(scheduleForm.endDate, 'End Date', {label_attr: {class: 'form-label'}}) }}
-        {{ form_widget(scheduleForm.endDate, {attr: {class: 'form-control', placeholder: ''
-        }}) }}
-        {{ form_errors(scheduleForm.endDate) }}
+    {{ form_label(scheduleForm.endDate, 'End Date', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(scheduleForm.endDate, {attr: {class: 'form-control', placeholder: ''
+    }}) }}
+    {{ form_errors(scheduleForm.endDate) }}
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
     {{ form_end(scheduleForm) }}
-{#    <form action="{{ path('web_add_schedule') }}" method="post">#}
-{#        <h1>Create Schedule</h1>#}
-{#        <div class="form-floating">#}
-{#            <input type="date" class="form-control" name="startDate">#}
-{#            <label for="floatingInput">Start Date</label>#}
-{#        </div>#}
-{#        <div class="form-floating">#}
-{#            <input type="date" class="form-control" name="endDate">#}
-{#            <label for="floatingInput">End Date</label>#}
-{#        </div>#}
-{#        <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>#}
-{#    </form>#}
 {% endblock %}

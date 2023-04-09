@@ -11,11 +11,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class NewsletterController extends AbstractController
 {
-    public function __construct(private UserRepository $userRepository, private MessageBusInterface $bus)
-    {
+    public function __construct(
+        private UserRepository $userRepository,
+        private MessageBusInterface $bus,
+        private CacheInterface $cache
+    ) {
     }
 
     #[Route(path: '/admin/newsletter/send', name: 'admin_send_newsletter', methods: ['GET', 'POST'])]
@@ -44,6 +48,8 @@ class NewsletterController extends AbstractController
         $user = $this->getUser();
         $user->isSubscribed = true;
         $this->userRepository->update($user);
+
+        $this->cache->delete('main_page_'. $this->getUser()->getId());
 
         return $this->redirectToRoute('web_main_page');
     }

@@ -25,7 +25,12 @@
                         <td>{{day.endTime.format('H:i')}}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="#"> Add Break</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{path('web_add_break', {'id': day.id}) }}"> Add Break</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="actionContainer">
+                                <a class="btn btn-sm btn-outline-secondary" href="{{path('web_show_breaks', {'id': day.id}) }}"> View Breaks</a>
                             </div>
                         </td>
                         <td>

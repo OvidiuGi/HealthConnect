@@ -34,6 +34,18 @@
             {{ form_label(form.cnp, 'CNP', {label_attr: {class: 'form-label'}}) }}
             {{ form_errors(form.cnp) }}
         </div>
+        <div class="form-floating">
+            {{ form_widget(form.specialization, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.specialization, 'Specialization', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.specialization) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.experience, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.experience, 'Experience', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.experience) }}
+        </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
         {{ form_end(form) }}
     </div>

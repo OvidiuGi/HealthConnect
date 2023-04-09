@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route(path: '/schedule')]
+#[Route(path: '/medic/schedules')]
 class ScheduleController extends AbstractController
 {
     private ScheduleRepository $scheduleRepository;
@@ -73,7 +73,7 @@ class ScheduleController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/delete/{id}', name: 'web_delete_schedule', methods: ['GET', 'POST'])]
+    #[Route(path: '/{id}/delete', name: 'web_delete_schedule', methods: ['GET', 'POST'])]
     public function delete(int $id): Response
     {
         $schedule = $this->scheduleRepository->findOneBy(['id' => $id]);

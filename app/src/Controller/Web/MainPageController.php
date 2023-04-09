@@ -22,26 +22,28 @@ class MainPageController extends AbstractController
     public function load(): Response
     {
         if($this->isGranted('ROLE_USER')){
-            $cacheKey = 'main_page_'.$this->getUser()->getId();
+//            $cacheKey = 'main_page_'.$this->getUser()->getId();
+//
+//            return $this->cache->get($cacheKey, function (ItemInterface $item) {
+//                $item->expiresAfter(43200);
+//
+//                return $this->render('web/main_page/main_page.html.twig');
+//            });
 
-            return $this->cache->get($cacheKey, function (ItemInterface $item) {
-                $item->expiresAfter(43200);
 
-                return $this->render('web/main_page/main_page.html.twig');
-            });
         }
-
-        return $this->cache->get('main_page', function (ItemInterface $item) {
-            $item->expiresAfter(43200);
-
-            return $this->render('web/main_page/main_page.html.twig');
-        });
+        return $this->render('web/main_page/main_page.html.twig');
+//        return $this->cache->get('main_page', function (ItemInterface $item) {
+//            $item->expiresAfter(43200);
+//
+//            return $this->render('web/main_page/main_page.html.twig');
+//        });
     }
 
-    #[Route(path: '/new-appointment', name: 'web_new_appointment', methods: ['GET'])]
-    public function newAppointment(): Response
+    #[Route(path: '/hospitals', name: 'web_browse_hospitals', methods: ['GET'])]
+    public function browseHospitals(): Response
     {
-        return $this->render('web/main_page/new_appointment.html.twig', [
+        return $this->render('web/main_page/browse_hospitals.html.twig', [
             'buildings' => $this->buildingRepository->findAll(),
         ]);
     }

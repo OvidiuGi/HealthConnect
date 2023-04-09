@@ -23,4 +23,28 @@ class ServiceRepository extends ServiceEntityRepository
 
         parent::__construct($registry, Service::class);
     }
+
+    public function save(Service $entity, bool $flush = true): void
+    {
+        $this->entityManager->persist($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
+    public function delete(Service $entity, bool $flush = true): void
+    {
+        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
+    public function update(Service $entity, bool $flush = true): void
+    {
+        $this->entityManager->persist($entity);
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
 }

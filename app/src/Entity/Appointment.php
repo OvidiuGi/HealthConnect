@@ -27,7 +27,7 @@ class Appointment
     // Many Services have one Appointment.
     #[ORM\ManyToOne(targetEntity: Service::class)]
     #[ORM\JoinColumn(name: 'service_id', referencedColumnName: 'id')]
-    public Service $service;
+    public ?Service $service;
 
     // Many Appointment have one Doctor.
     #[ORM\ManyToOne(targetEntity: User::class)]
@@ -62,7 +62,7 @@ class Appointment
         return $this->service;
     }
 
-    public function setServices(Service $service): self
+    public function setServices(?Service $service): self
     {
         $this->service = $service;
 
