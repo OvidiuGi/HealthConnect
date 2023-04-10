@@ -6,6 +6,7 @@ namespace App\Controller\Web;
 
 use App\Form\Web\UserRegisterFormType;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route(path: '/')]
 class SecurityController extends AbstractController
 {
+    use LoggerAwareTrait;
+
     public function __construct(
         private UserPasswordHasherInterface $passwordHasher,
         private UserRepository $userRepository
@@ -48,6 +51,7 @@ class SecurityController extends AbstractController
             $user->password = $this->passwordHasher->hashPassword($user, $user->plainPassword);
             $this->userRepository->save($user);
 
+            $this->logger->info();
             return $this->redirectToRoute('web_login');
         }
 

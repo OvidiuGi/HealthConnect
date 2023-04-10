@@ -90,7 +90,7 @@ class AppointmentRepository extends ServiceEntityRepository
     {
         return $this->entityManager
             ->createQueryBuilder()
-            ->select('a.timeInterval')
+            ->select('a.startTime, a.endTime')
             ->from('App\Entity\Appointment', 'a')
             ->where('a.date = :date')
             ->setParameter('date', $date)

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Web;
 
+use App\Entity\Appointment;
 use App\Form\Web\AddAppointmentType;
 use App\Message\NewAppointmentNotification;
 use App\Repository\AppointmentRepository;
@@ -45,14 +46,13 @@ class AppointmentController extends AbstractController
     #[Route(path: '/medic/{id}/new-appointment', name: 'web_add_appointment_by_medic', methods: ['GET', 'POST'])]
     public function createAppointmentByDoctorId(Request $request): Response
     {
-        $form = $this->createForm(AddAppointmentType::class);
+        $appointment = new Appointment();
+        $form = $this->createForm(AddAppointmentType::class, $appointment);
         $form->handleRequest($request);
         $id = $request->get('id');
         if ($form->isSubmitted() && $form->isValid()) {
             $appointment = $form->getData();
-            $appointment->setCustomer($this->getUser());
-            $appointment->setDoctor($this->userRepository->findOneBy(['id' => $id, 'role' => 'ROLE_MEDIC']));
-            $appointment->setDate($form->get('date')->getData());
+            $appointment->setEndTime($appointment->getStartTime()->modify('+' . $appointment->getService()->getDuration() . ' minutes'));
             $this->appointmentRepository->save($appointment);
 
             // Dispatch confirmation email

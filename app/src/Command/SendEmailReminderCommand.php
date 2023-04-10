@@ -28,16 +28,16 @@ class SendEmailReminderCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $appointments = $this->appointmentRepository->findAll();
+        $appointments = $this->appointmentRepository->findBy(['isCompleted' => false]);
 
         foreach ($appointments as $appointment) {
-            if ($appointment->getDate()->modify('+1 day') == new \DateTimeImmutable()) {
+            if ($appointment->getDate() == new \DateTimeImmutable('+1 day')) {
                 $this->bus->dispatch(new AppointmentReminderNotification($appointment, 24));
             }
 
-//            if ($appointment->getDate()->modify('+3 hours') == new \DateTimeImmutable()) {
+            if ($appointment->getDate()->modify('+3 hours') == new \DateTimeImmutable()) {
                 $this->bus->dispatch(new AppointmentReminderNotification($appointment, 3));
-//            }
+            }
         }
 
         $io->success('Reminders sent successfully!');

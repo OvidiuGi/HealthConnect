@@ -27,15 +27,12 @@ class NewAppointmentNotification
 
     public function getAppointmentTime(): string
     {
-        $timeInterval = explode('-', $this->appointment->timeInterval)[0];
-
-        $timeInterval = str_replace(':', '', $timeInterval);
-        return $timeInterval . '00';
+        return $this->appointment->getStartTime()->format('Hi'). $this->appointment->getEndTime()->format('Hi') . '00';
     }
 
     public function getService(): string
     {
-        return $this->appointment->getServices()->name;
+        return $this->appointment->getService()->name;
     }
 
     public function getLocation(): string
@@ -45,6 +42,6 @@ class NewAppointmentNotification
 
     public function getDuration(): string
     {
-        return $this->appointment->getServices()->duration;
+        return $this->appointment->getService()->duration;
     }
 }

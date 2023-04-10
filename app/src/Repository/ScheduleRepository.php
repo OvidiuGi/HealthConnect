@@ -42,9 +42,9 @@ class ScheduleRepository extends ServiceEntityRepository
 
     public function getDoctorDays(int $doctorId): array
     {
-        return $this->entityManager
+        $result =  $this->entityManager
             ->createQueryBuilder()
-            ->select('d.date')
+            ->select('d')
             ->from('App\Entity\Day', 'd')
             ->join('App\Entity\Schedule', 's')
             ->where('d.schedule = s.id')
@@ -52,6 +52,11 @@ class ScheduleRepository extends ServiceEntityRepository
             ->setParameter('doctorId', $doctorId)
             ->getQuery()
             ->execute();
+
+        $res = array_map(function ($day) {
+            return $day->getDate();
+        }, $result);
+        return $res;
     }
 
     public function getAvailableDates(int $scheduleId): array

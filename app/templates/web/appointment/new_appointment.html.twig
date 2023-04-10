@@ -5,6 +5,18 @@
         {{ form_start(form, {method: 'POST'}) }}
         <h1 class="text-center">Add Appointment</h1>
         <div class="form-floating">
+            {{ form_widget(form.customer, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.customer, 'Customer', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.customer) }}
+        </div>
+        <div class="form-floating">
+            {{ form_widget(form.doctor, {attr: {class: 'form-control', placeholder: ''
+            }}) }}
+            {{ form_label(form.doctor, 'Doctor', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.doctor) }}
+        </div>
+        <div class="form-floating">
             {{ form_widget(form.service, {attr: {class: 'form-control', placeholder: ''
             }}) }}
             {{ form_label(form.service, 'Service', {label_attr: {class: 'form-label'}}) }}
@@ -16,12 +28,12 @@
             {{ form_label(form.date, 'Date', {label_attr: {class: 'form-label'}}) }}
             {{ form_errors(form.date) }}
         </div>
-        {% if form.timeInterval is defined %}
+        {% if form.startTime is defined %}
         <div class="form-floating">
-            {{ form_widget(form.timeInterval, {attr: {class: 'form-control', placeholder: ''
+            {{ form_widget(form.startTime, {attr: {class: 'form-control', placeholder: ''
             }}) }}
-            {{ form_label(form.timeInterval, 'Time Interval', {label_attr: {class: 'form-label'}}) }}
-            {{ form_errors(form.timeInterval) }}
+            {{ form_label(form.startTime, 'Start Time', {label_attr: {class: 'form-label'}}) }}
+            {{ form_errors(form.startTime) }}
         </div>
         {% endif %}
         <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>

@@ -15,9 +15,12 @@ class Appointment
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    #[Assert\NotBlank(message: 'Please select the time interval')]
-    public ?string $timeInterval = '';
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[Assert\NotBlank(message: 'Please select the start time')]
+    private ?\DateTimeImmutable $startTime;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    private ?\DateTimeImmutable $endTime;
 
     // Many Appointment have one Customer.
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'appointments')]
@@ -35,7 +38,7 @@ class Appointment
     private User $doctor;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
-    private \DateTimeImmutable $date;
+    private ?\DateTimeImmutable $date;
 
     #[ORM\Column(type: 'boolean', nullable: false)]
     public bool $isCompleted = false;
@@ -57,9 +60,9 @@ class Appointment
         return $this;
     }
 
-    public function getServices(): ?Service
+    public function getService(): ?Service
     {
-        return $this->service;
+        return $this->service ?? null;
     }
 
     public function setServices(?Service $service): self
@@ -81,14 +84,38 @@ class Appointment
         return $this;
     }
 
-    public function getDate(): \DateTimeImmutable
+    public function getDate(): ?\DateTimeImmutable
     {
-        return $this->date;
+        return $this->date ?? null;
     }
 
-    public function setDate(\DateTimeImmutable $date): self
+    public function setDate(?\DateTimeImmutable $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getStartTime(): ?\DateTimeImmutable
+    {
+        return $this->startTime ?? null;
+    }
+
+    public function setStartTime(?\DateTimeImmutable $startTime): self
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    public function getEndTime(): ?\DateTimeImmutable
+    {
+        return $this->endTime ?? null;
+    }
+
+    public function setEndTime(?\DateTimeImmutable $endTime): self
+    {
+        $this->endTime = $endTime;
 
         return $this;
     }
