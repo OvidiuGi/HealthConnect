@@ -14,7 +14,9 @@
                     <th scope="col">Customer</th>
                     <th scope="col">City</th>
                     <th scope="col">Address</th>
-                    <th scope="col">Time Interval</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Start Time</th>
+                    <th scope="col">End Time</th>
                     <th scope="col">Completed</th>
                     <th scope="col">Cancel</th>
                 </tr>
@@ -27,12 +29,14 @@
                         <td><a class="nav-link text-secondary" href="#">{{ appointment.customer.firstName }} {{ appointment.customer.lastName }}</a></td>
                         <td>{{ appointment.doctor.office.city }}</td>
                         <td>{{ appointment.doctor.office.address }}</td>
-                        <td>{{ appointment.timeInterval }}</td>
+                        <td>{{ appointment.date.format('d/m/Y') }}</td>
+                        <td>{{ appointment.startTime.format('H:i') }}</td>
+                        <td>{{ appointment.endTime.format('H:i') }}</td>
                         <td>{{ appointment.isCompleted ? 'Yes' : 'No' }}</td>
                         <td>
                             <div class="actionContainer">
                                 <form
-                                        action="{{ path('web_delete_appointment', {'id': appointment.id}) }}"
+                                        action="{{ path('web_medic_delete_appointment', {'id': appointment.id}) }}"
                                         method="POST"
                                         {{ stimulus_controller('submit-confirm', {
                                             title: 'Remove this appointment?',
@@ -51,6 +55,7 @@
             </table>
         </div>
     </main>
+    {% if totalPages > 0 %}
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item">
@@ -64,4 +69,5 @@
             </li>
         </ul>
     </nav>
+    {% endif %}
 {% endblock %}

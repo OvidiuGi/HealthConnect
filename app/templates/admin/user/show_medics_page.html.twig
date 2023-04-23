@@ -31,7 +31,11 @@
                         <td>{{ user.cnp }}</td>
                         <td>{{ user.specialization }}</td>
                         <td>{{ user.experience }}</td>
-                        <td>{{ user.office.id }}</td>
+                        {% if user.office is null %}
+                            <td>None</td>
+                        {% else %}
+                            <td>{{ user.office.name }}</td>
+                        {% endif %}
                         <td>
                             <div class="actionContainer">
                                 <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_edit_medic',{'id': user.id})}}"> Edit</a>
@@ -44,6 +48,7 @@
             </table>
         </div>
     </main>
+    {% if totalPages > 0 %}
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item">
@@ -57,4 +62,5 @@
             </li>
         </ul>
     </nav>
+    {% endif %}
 {% endblock %}

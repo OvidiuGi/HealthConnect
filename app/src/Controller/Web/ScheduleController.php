@@ -11,18 +11,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route(path: '/medic/schedules')]
 class ScheduleController extends AbstractController
 {
-    private ScheduleRepository $scheduleRepository;
-
-    private UserRepository $userRepository;
-
-    public function __construct(ScheduleRepository $scheduleRepository, UserRepository $userRepository)
-    {
-        $this->scheduleRepository = $scheduleRepository;
-        $this->userRepository = $userRepository;
+    public function __construct(
+        private ScheduleRepository $scheduleRepository,
+        private UserRepository $userRepository,
+        private TagAwareCacheInterface $cache
+    ) {
     }
 
     #[Route(path: '/add', name: 'web_add_schedule', methods: ['GET', 'POST'])]
@@ -46,6 +45,7 @@ class ScheduleController extends AbstractController
             }
 
             $this->scheduleRepository->save($schedule);
+            $this->cache->invalidateTags(['schedules_medic_id_' . $this->getUser()->getId()]);
 
             return $this->redirectToRoute('web_show_schedules');
         }
@@ -58,19 +58,40 @@ class ScheduleController extends AbstractController
     #[Route(name: 'web_show_schedules', methods: ['GET'])]
     public function showSchedules(): Response
     {
-        return $this->render('web/schedule/show_schedules.html.twig', [
-            'schedules' => $this->scheduleRepository->findBy(['doctor' => $this->getUser()]),
-        ]);
+        $cacheTag = 'schedules_medic_id_' . $this->getUser()->getId();
+
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($cacheTag) {
+            $schedules  = $this->scheduleRepository->findBy(['doctor' => $this->getUser()]);
+            $item->expiresAfter(43200);
+
+            foreach ($schedules as $schedule) {
+                $item->tag('schedule_id_' . $schedule->getId());
+            }
+
+            return $this->render('web/schedule/show_schedules.html.twig', [
+                'schedules' => $schedules,
+            ]);
+        });
     }
 
     #[Route(path: '/{id}', name: 'web_show_schedules_by_id', methods: ['GET'])]
     public function showSchedulesById(int $id): Response
     {
-        return $this->render('web/schedule/show_schedules_by_id.html.twig', [
-            'schedule' => $this->scheduleRepository->findOneBy(['id' => $id]),
-            'daysNumber' => $this->scheduleRepository->findOneBy(['id' => $id])->getDays()->count(),
-            'possibleDaysNumber' => $this->scheduleRepository->getPossibleDaysNumber($id)
-        ]);
+        return $this->cache->get('schedule_id_' . $id, function (ItemInterface $item) use ($id) {
+            $schedule = $this->scheduleRepository->findOneBy(['id' => $id]);
+
+            $item->expiresAfter(43200);
+            foreach ($schedule->getDays() as $day) {
+                $item->tag('day_id_' . $day->getId());
+            }
+            $item->tag('schedule_id_' . $id);
+
+            return $this->render('web/schedule/show_schedules_by_id.html.twig', [
+                'schedule' => $schedule,
+                'daysNumber' => $this->scheduleRepository->findOneBy(['id' => $id])->getDays()->count(),
+                'possibleDaysNumber' => $this->scheduleRepository->getPossibleDaysNumber($id)
+            ]);
+        });
     }
 
     #[Route(path: '/{id}/delete', name: 'web_delete_schedule', methods: ['GET', 'POST'])]
@@ -84,6 +105,7 @@ class ScheduleController extends AbstractController
         }
 
         $this->scheduleRepository->delete($schedule);
+        $this->cache->invalidateTags(['schedule_id' . $id]);
         $this->addFlash('success','Schedule deleted successfully');
 
         return $this->redirectToRoute('web_show_schedules');

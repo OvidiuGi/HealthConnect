@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route(path: '/')]
 class UserController extends AbstractController
@@ -22,7 +24,8 @@ class UserController extends AbstractController
     public function __construct(
         private UserRepository $userRepository,
         private AppointmentRepository $appointmentRepository,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private TagAwareCacheInterface $cache
     ) {
     }
 
@@ -38,6 +41,7 @@ class UserController extends AbstractController
             $user = $form->getData();
 
             $this->userRepository->update($user);
+            $this->cache->invalidateTags(['appointment_customer_id_' . $user->getId()]);
 
             return $this->redirectToRoute('web_login');
         }
@@ -48,9 +52,14 @@ class UserController extends AbstractController
     #[Route(path: '/hospitals/{id}/medics', name: 'web_show_medics', methods: ['GET'])]
     public function getMedicsByHospitalId(int $id): Response
     {
-        return $this->render('web/user/show_medics.html.twig', [
-            'medics' => $this->userRepository->findBy(['office' => $id]),
-        ]);
+        $cacheTag = 'browse_medics_hospital_' . $id;
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($id) {
+            $item->expiresAfter(43200);
+
+            return $this->render('web/user/show_medics.html.twig', [
+                'medics' => $this->userRepository->findBy(['office' => $id]),
+            ]);
+        });
     }
 
     #[Route(path: '/delete', name: 'web_delete_user', methods: ['GET','POST'])]
@@ -60,6 +69,8 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         $security->logout(false);
+
+        $this->cache->invalidateTags(['appointment_customer_iddo_' . $user->getId()]);
         $this->userRepository->delete($user);
 
         return $this->redirectToRoute('web_login');

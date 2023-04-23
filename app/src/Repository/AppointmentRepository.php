@@ -86,7 +86,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function getAppointmentsIntervalByDate(\DateTimeImmutable $date)
+    public function getAppointmentsIntervalByDate(\DateTimeImmutable $date): array
     {
         return $this->entityManager
             ->createQueryBuilder()

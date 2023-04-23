@@ -20,17 +20,31 @@ class BuildingRepository extends ServiceEntityRepository
         parent::__construct($registry, Building::class);
     }
 
-    public function getPaginated(int $page, int $limit): array
+    public function getPaginatedFilteredSorted(array $options): array
     {
-        return $this->entityManager
+        $direction = isset($options['direction']) ? strtoupper($options['direction']) : 'ASC';
+
+        if (!in_array(strtoupper($direction), ['ASC', 'DESC'])) {
+            $options['direction'] = 'ASC';
+        }
+
+        $query = $this->entityManager
             ->createQueryBuilder()
             ->select('b')
             ->from('App\Entity\Building', 'b')
             ->groupBy('b.id')
-            ->setFirstResult(($page * $limit) - $limit)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->execute();
+            ->setFirstResult(($options['page'] * $options['limit']) - $options['limit'])
+            ->setMaxResults($options['limit']);
+
+        if (isset($options['search'])) {
+            $query->andWhere('b.name LIKE :search')->setParameter(':search', '%' .$options['search'] . '%');
+        }
+
+        if (isset($options['sortBy'])) {
+            $query->orderBy('b.' . $options['sortBy'], $direction);
+        }
+
+        return $query->getQuery()->execute();
     }
 
     public function save(Building $entity, bool $flush = true): void

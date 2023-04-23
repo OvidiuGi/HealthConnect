@@ -24,7 +24,7 @@
             </ul>
             <div class="text-end">
                 {% if app.user %}
-                <a href="{{ path('web_browse_hospitals') }}" class="btn btn-outline-light me-2">New Appointment</a>
+                <a href="{{ path('web_browse_hospitals') }}" class="btn btn-outline-light me-2">Browse Hospitals</a>
                     <div class="btn me-2 dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">My Account
                             <span class="caret"></span></button>
@@ -34,6 +34,8 @@
                             <li><a href="{{path('web_show_schedules')}}" class="dropdown-item d-flex gap-2 align-items-center">Edit Schedule</a></li>
                             <li><a href="{{ path('web_show_services') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Services</a></li>
                             <li><a href="{{ path('web_edit_medic') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
+                            <li><a href="{{ path('web_medic_appointments_chart_analytics') }}" class="dropdown-item d-flex gap-2 align-items-center">Appointment Chart</a></li>
+                            <li><a href="{{ path('web_medic_services_chart_analytics') }}" class="dropdown-item d-flex gap-2 align-items-center">Services Chart</a></li>
                             {% else %}
                             <li><a href="{{ path('web_edit_user') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
                             {% endif %}

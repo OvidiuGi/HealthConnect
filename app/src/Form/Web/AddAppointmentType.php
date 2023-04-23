@@ -32,22 +32,6 @@ class AddAppointmentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $currentRequest = $this->requestStack->getCurrentRequest();
-        $builder->add('customer', EntityType::class, [
-            'class' => 'App\Entity\User',
-            'choices' => $currentRequest->getUser(),
-            'choice_label' => function($user) {
-                return $user->firstName . ' ' . $user->lastName;
-            },
-            'disabled' => true,
-        ])
-            ->add('doctor', EntityType::class, [
-                'class' => 'App\Entity\User',
-                'choices' => $this->userRepository->findBy(['id' => $currentRequest->get('id')]),
-                'choice_label' => function($user) {
-                    return $user->firstName . ' ' . $user->lastName;
-                },
-                'disabled' => true,
-        ]);
         $builder->add('service', EntityType::class, [
             'placeholder' => 'Select a service',
             'class' => 'App\Entity\Service',
@@ -126,14 +110,17 @@ class AddAppointmentType extends AbstractType
         return $result;
     }
 
-    public function isIntervalBusy(\DateTimeImmutable $date, \DateTimeImmutable $startTime, \DateTimeImmutable $endTime): bool
+    public function isIntervalBusy(\DateTimeImmutable $date, \DateTimeImmutable $newStartTime, \DateTimeImmutable $newEndTime): bool
     {
         $busyIntervals = $this->appointmentRepository->getAppointmentsIntervalByDate($date);
+        /** @var array $busyInterval */
         foreach ($busyIntervals as $busyInterval) {
-            if ($startTime >= $busyInterval && $startTime < $busyInterval[1]) {
+            $busyStartTime = $busyInterval['startTime'];
+            $busyEndTime = $busyInterval['endTime'];
+            if ($newStartTime >= $busyStartTime && $newStartTime < $busyEndTime) {
                 return true;
             }
-            if ($endTime >= $busyInterval[0] && $endTime < $busyInterval[1]) {
+            if ($newEndTime >= $busyStartTime && $newEndTime < $busyEndTime) {
                 return true;
             }
         }

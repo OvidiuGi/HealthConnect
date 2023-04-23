@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route(path: '/medic/days')]
 class DayController extends AbstractController
@@ -20,6 +21,7 @@ class DayController extends AbstractController
         private DayRepository $dayRepository,
         private ScheduleRepository $scheduleRepository,
         private AppointmentRepository $appointmentRepository,
+        private TagAwareCacheInterface $cache
     ) {
     }
 
@@ -41,7 +43,7 @@ class DayController extends AbstractController
             $day->setStartTime($startTime);
 
             $day->setSchedule($this->scheduleRepository->findOneBy(['id' => $id]));
-
+            $this->cache->invalidateTags(['schedule_id_' . $id]);
             $this->dayRepository->save($day);
 
             return $this->redirectToRoute('web_show_schedules');
@@ -57,13 +59,10 @@ class DayController extends AbstractController
     {
         $day = $this->dayRepository->findOneBy(['id' => $id]);
         if (null === $day) {
-            $this->addFlash('error','Day not found');
-
             return $this->redirectToRoute('web_show_schedules');
         }
-
         $this->dayRepository->delete($day);
-        $this->addFlash('success','Day deleted successfully');
+        $this->cache->invalidateTags(['day_id_' . $id]);
 
         return $this->redirectToRoute('web_show_schedules');
     }
@@ -110,13 +109,11 @@ class DayController extends AbstractController
     {
         $appointment = $this->appointmentRepository->findOneBy(['id' => $id]);
         if (null === $appointment) {
-            $this->addFlash('error','Break not found');
 
             return $this->redirectToRoute('web_show_schedules');
         }
 
         $this->appointmentRepository->delete($appointment);
-        $this->addFlash('success','Break deleted successfully');
 
         return $this->redirectToRoute('web_show_schedules');
     }

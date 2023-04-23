@@ -40,6 +40,7 @@
             </table>
         </div>
     </main>
+    {% if totalPages > 0 %}
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item">
@@ -53,4 +54,5 @@
             </li>
         </ul>
     </nav>
+    {% endif %}
 {% endblock %}

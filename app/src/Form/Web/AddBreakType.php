@@ -9,7 +9,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AddBreakType extends AbstractType
@@ -21,7 +23,16 @@ class AddBreakType extends AbstractType
                 'data' => $options['data']->getDate()->format('d-m-Y'),
                 'disabled' => true
             ])
-            ->add('timeInterval', TextType::class);
+            ->add('startTime', TimeType::class, [
+                'widget' => 'single_text',
+                'attr' => ['class' => 'js-timepicker'],
+                'input' => 'datetime_immutable',
+            ])
+            ->add('endTime', TimeType::class, [
+                'widget' => 'single_text',
+                'attr' => ['class' => 'js-timepicker'],
+                'input' => 'datetime_immutable',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

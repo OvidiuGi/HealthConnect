@@ -34,7 +34,7 @@ class UpdateMedicType extends AbstractType
                 'class' => 'App\Entity\Building',
                 'choices' => $this->buildingRepository->findAll(),
                 'choice_label' => function(Building $building) {
-                    return $building->address;
+                    return $building->name;
                 },
             ])
         ;

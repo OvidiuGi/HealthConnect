@@ -9,38 +9,60 @@ use App\Form\Web\AddAppointmentType;
 use App\Message\NewAppointmentNotification;
 use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class AppointmentController extends AbstractController
 {
     public function __construct(
         private AppointmentRepository $appointmentRepository,
         private UserRepository $userRepository,
-        private MessageBusInterface $bus
+        private MessageBusInterface $bus,
+        private LoggerInterface $analyticsLogger,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
     #[Route(path:'/appointments', name: 'web_show_appointments', methods: ['GET'])]
     public function showAppointments(Request $request): Response
     {
-        $paginate['page'] = (int)$request->query->get('page',1);
-        $paginate['size'] = (int)$request->query->get('size',10);
+        $cacheTag = 'show_appointments_' . $this->getUser()->getId();
 
-        $appointments = $this
-            ->appointmentRepository
-            ->getPaginatedByUser($paginate['page'], $paginate['size'], $this->getUser()->getId());
-        $totalPages = \ceil(\count($this->appointmentRepository->findBy(['customer' => $this->getUser()])) / $paginate['size']);
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($request, $cacheTag) {
+            $paginate['page'] = (int)$request->query->get('page',1);
+            $paginate['size'] = (int)$request->query->get('size',10);
 
-        return $this->render('web/appointment/show_appointments_page.html.twig', [
-            'appointments' => $appointments,
-            'page' => $paginate['page'],
-            'size' => $paginate['size'],
-            'totalPages' => $totalPages,
-        ]);
+            $appointments = $this
+                ->appointmentRepository
+                ->getPaginatedByUser($paginate['page'], $paginate['size'], $this->getUser()->getId());
+            $totalPages = \ceil(\count($this->appointmentRepository->findBy(['customer' => $this->getUser()])) / $paginate['size']);
+
+            $item->expiresAfter(43200);
+            $identities = ['show_appointments_' . $this->getUser()->getId()];
+
+            foreach ($appointments as $appointment) {
+                $identities[] = 'appointment_id_' . $appointment->getId();
+                $identities[] = 'appointment_doctor_id_' . $appointment->getDoctor()->getId();
+                $identities[] = 'appointment_customer_id_' . $appointment->getCustomer()->getId();
+                $identities[] = 'appointment_service_id_' . $appointment->getService()->getId();
+                $identities[] = 'appointment_is_completed_' . $appointment->getId();
+            }
+            $item->tag($identities);
+
+            return $this->render('web/appointment/show_appointments_page.html.twig', [
+                'appointments' => $appointments,
+                'page' => $paginate['page'],
+                'size' => $paginate['size'],
+                'totalPages' => $totalPages,
+            ]);
+        });
+
     }
 
     #[Route(path: '/medic/{id}/new-appointment', name: 'web_add_appointment_by_medic', methods: ['GET', 'POST'])]
@@ -52,11 +74,30 @@ class AppointmentController extends AbstractController
         $id = $request->get('id');
         if ($form->isSubmitted() && $form->isValid()) {
             $appointment = $form->getData();
-            $appointment->setEndTime($appointment->getStartTime()->modify('+' . $appointment->getService()->getDuration() . ' minutes'));
+            $appointment->setCustomer($this->getUser());
+            $appointment->setDoctor($this->userRepository->findOneBy(['id' => $id, 'role' => 'ROLE_MEDIC']));
+            $appointment->setEndTime($appointment->getStartTime()->modify('+' . $appointment->getService()->duration . ' minutes'));
             $this->appointmentRepository->save($appointment);
+            $this->cache->invalidateTags([
+                    'show_appointments_' . $this->getUser()->getId(),
+                    'show_medic_appointments_' . $appointment->getDoctor()->getId(),
+            ]);
+            $this->analyticsLogger->info(
+                'New Appointment Created',
+                [
+                    'appointmentId' => $appointment->getId(),
+                    'doctorId' => $appointment->getDoctor()->getId(),
+                    'customerId' => $appointment->getCustomer()->getId(),
+                    'service' => $appointment->getService()->name,
+                    'type' => 'new-appointment',
+                    'success' => true,
+                    'date' => $appointment->getStartTime()->format('d/m/Y'),
 
+                ]
+            );
             // Dispatch confirmation email
             $this->bus->dispatch(new NewAppointmentNotification($appointment));
+
             return $this->redirectToRoute('web_show_appointments');
         }
 
@@ -72,10 +113,13 @@ class AppointmentController extends AbstractController
 
             return $this->redirectToRoute('web_show_appointments');
         }
-
+        $this->cache->invalidateTags([
+            'appointment_id_' . $appointment->getId()
+        ]);
         $this->appointmentRepository->delete($appointment);
+
         $this->addFlash('success','Appointment deleted successfully');
 
-        return $this->redirectToRoute('web_medic_appointments');
+        return $this->redirectToRoute('web_show_appointments');
     }
 }

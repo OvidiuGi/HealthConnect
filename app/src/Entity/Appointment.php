@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'appointments')]
 class Appointment
 {
+    public const CACHE_TAG = 'appointment_';
+
     #[ORM\Id()]
     #[ORM\GeneratedValue()]
     #[ORM\Column(type: 'integer')]
@@ -35,7 +37,7 @@ class Appointment
     // Many Appointment have one Doctor.
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    private User $doctor;
+    private ?User $doctor;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
     private ?\DateTimeImmutable $date;
@@ -72,12 +74,12 @@ class Appointment
         return $this;
     }
 
-    public function getDoctor(): User
+    public function getDoctor(): ?User
     {
-        return $this->doctor;
+        return $this->doctor ?? null;
     }
 
-    public function setDoctor(User $doctor): self
+    public function setDoctor(?User $doctor): self
     {
         $this->doctor = $doctor;
 

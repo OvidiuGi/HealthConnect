@@ -10,6 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 #[Route(path:'/medic/services')]
 class ServiceController extends AbstractController
@@ -17,17 +19,27 @@ class ServiceController extends AbstractController
     public function __construct(
         private ServiceRepository $serviceRepository,
         private UserRepository $userRepository,
+        private TagAwareCacheInterface $cache,
     ) {
     }
 
     #[Route(name: 'web_show_services', methods: ['GET'])]
     public function showServices(Request $request): Response
     {
-        $services = $this->getUser()->getServices();
+        $cacheTag = 'services_' . $this->getUser()->getId();
 
-        return $this->render('web/service/show_services.html.twig', [
-            'services' => $services,
-        ]);
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($cacheTag) {
+            $services = $this->getUser()->getServices();
+            $item->expiresAfter(43200);
+
+            foreach ($services as $service) {
+                $item->tag('service_id_' . $service->getId());
+            }
+
+            return $this->render('web/service/show_services.html.twig', [
+                'services' => $services,
+            ]);
+        });
     }
 
     #[Route(path: '/add', name: 'web_add_service', methods: ['GET', 'POST'])]
@@ -41,7 +53,7 @@ class ServiceController extends AbstractController
             /** @var Service $service */
             $service = $form->getData();
             $service->setDoctor($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
-
+            $this->cache->invalidateTags(['service_id_' . $service->getId()]);
 
             $this->serviceRepository->save($service);
 
@@ -59,13 +71,15 @@ class ServiceController extends AbstractController
     {
         $service = $this->serviceRepository->findOneBy(['id' => $id]);
         if (null === $service) {
-            $this->addFlash('error','Service not found');
 
             return $this->redirectToRoute('web_show_services');
         }
 
+        $this->cache->invalidateTags([
+            'service_id_' . $service->getId(),
+            'appointment_service_id_' . $service->getId(),
+        ]);
         $this->serviceRepository->delete($service);
-        $this->addFlash('success','Service deleted successfully');
 
         return $this->redirectToRoute('web_show_services');
     }
@@ -83,6 +97,10 @@ class ServiceController extends AbstractController
 
             $this->serviceRepository->update($service);
 
+            $this->cache->invalidateTags([
+                'service_id_' . $service->getId(),
+                'appointment_service_id_' . $service->getId(),
+            ]);
             return $this->redirectToRoute('web_show_services');
         }
 

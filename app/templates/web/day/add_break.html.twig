@@ -9,10 +9,15 @@
     }}) }}
     {{ form_errors(form.date) }}
 
-    {{ form_label(form.timeInterval, 'Time Interval', {label_attr: {class: 'form-label'}}) }}
-    {{ form_widget(form.timeInterval, {attr: {class: 'form-control', placeholder: 'Use this format: xx:xx-xx:xx'
+    {{ form_label(form.startTime, 'Start Time', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(form.startTime, {attr: {class: 'form-control', placeholder: 'Use this format: xx:xx-xx:xx'
     }}) }}
-    {{ form_errors(form.timeInterval) }}
+    {{ form_errors(form.startTime) }}
+
+    {{ form_label(form.endTime, 'End Time', {label_attr: {class: 'form-label'}}) }}
+    {{ form_widget(form.endTime, {attr: {class: 'form-control', placeholder: 'Use this format: xx:xx-xx:xx'
+    }}) }}
+    {{ form_errors(form.endTime) }}
 
     <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
     {{ form_end(form) }}
