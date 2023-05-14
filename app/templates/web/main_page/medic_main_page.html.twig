@@ -1,0 +1,30 @@
+{% extends 'web/base.html.twig' %}
+
+{% block header %}
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{{ path('web_main_page') }}" class="nav-link px-2 text-white">Home</a></li>
+                <li><a href="{{ path('web_medic_main_page') }}" class="nav-link px-2 text-white">Medic Dashboard</a></li>
+                <li><a href="{{path('web_medic_appointments')}}" class="nav-link px-2 text-white">Patient Appointments</a></li>
+                <li><a href="{{path('web_show_schedules')}}" class="nav-link px-2 text-white">Edit Schedule</a></li>
+                <li><a href="{{ path('web_show_services') }}" class="nav-link px-2 text-white">Edit Services</a></li>
+                <li><a href="{{ path('web_edit_medic') }}" class="nav-link px-2 text-white">Edit Profile</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'web/analytics/appointments_chart.html.twig' %}
+                </div>
+                <div class="col-md-6">
+                    {% include 'web/analytics/services_chart.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

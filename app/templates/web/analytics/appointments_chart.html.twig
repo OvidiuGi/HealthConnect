@@ -1,7 +1,4 @@
-{% extends 'web/base.html.twig' %}
-
-{% block body %}
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['bar']});
         google.charts.setOnLoadCallback(drawStuff);
@@ -26,10 +23,9 @@
                 bar: { groupWidth: "50%" }
             };
 
-            var chart = new google.charts.Bar(document.getElementById('top_x_div'));
+            var chart = new google.charts.Bar(document.getElementById('top_x_div1'));
             chart.draw(data, google.charts.Bar.convertOptions(options));
         }
     </script>
 
-    <div id="top_x_div" style="margin-left: 500px;margin-right: 500px; width: 500px; height: 550px;"></div>
-{% endblock %}
+    <div id="top_x_div1"></div>

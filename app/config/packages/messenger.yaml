@@ -3,20 +3,18 @@ framework:
         failure_transport: failed
 
         transports:
-            # https://symfony.com/doc/current/messenger.html#transport-configuration
-            async:
+            rabbitmq:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
                     exchange:
                         name: 'email_exchange'
                         type: fanout
             failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
-            Symfony\Component\Notifier\Message\ChatMessage: async
-            Symfony\Component\Notifier\Message\SmsMessage: async
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: rabbitmq
+            Symfony\Component\Notifier\Message\ChatMessage: rabbitmq
+            Symfony\Component\Notifier\Message\SmsMessage: rabbitmq
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

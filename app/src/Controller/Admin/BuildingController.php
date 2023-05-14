@@ -24,17 +24,16 @@ class BuildingController extends AbstractController
     #[Route(path: "/", name: 'admin_show_buildings', methods: ['GET'])]
     public function showBuildings(Request $request): Response
     {
-        $paginate['page'] = (int)$request->query->get('page',1);
-        $paginate['size'] = (int)$request->query->get('size',10);
-
-        $buildings = $this->buildingRepository->getPaginated($paginate['page'], $paginate['size']);
-        $totalPages = \ceil(\count($this->buildingRepository->findAll()) / $paginate['size']);
+        $options = [];
+        $options['page'] = (int)$request->query->get('page', 1);
+        $options['limit'] = (int)$request->query->get('limit', 10);
+        $options['sortBy'] = $request->query->get('sortBy');
+        $options['direction'] = $request->query->get('direction');
+        $options['search'] = $request->query->get('search');
 
         return $this->render('admin/building/show_buildings_page.html.twig', [
-            'buildings' => $buildings,
-            'page' => $paginate['page'],
-            'size' => $paginate['size'],
-            'totalPages' => $totalPages
+            'buildings' => $this->buildingRepository->getPaginatedFilteredSorted($options),
+            'totalPages' => \ceil(\count($this->buildingRepository->findAll()) / $options['limit']),
         ]);
     }
 

@@ -9,4 +9,4 @@ app/vendor/
 
 app/phpunit.xml
 app/.phpunit.result.cach
-./log
+log/

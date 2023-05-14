@@ -12,10 +12,14 @@
     {% endblock %}
 </head>
 <header class="p-3 text-bg-dark">
+    {% block header %}
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{{ path('web_main_page') }}" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="{{ path('web_main_page') }}" class="nav-link px-2 text-white">Home</a></li>
+                {% if is_granted('ROLE_MEDIC') %}
+                <li><a href="{{ path('web_medic_main_page') }}" class="nav-link px-2 text-white">Medic Dashboard</a></li>
+                {% endif %}
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About us</a></li>
                 {% if app.user %}
@@ -29,16 +33,7 @@
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">My Account
                             <span class="caret"></span></button>
                         <ul class="dropdown-menu dropdown-menu-dark mx-0 border-0 shadow w-220px">
-                            {% if is_granted('ROLE_MEDIC') %}
-                            <li><a href="{{path('web_medic_appointments')}}" class="dropdown-item d-flex gap-2 align-items-center">Appointments</a></li>
-                            <li><a href="{{path('web_show_schedules')}}" class="dropdown-item d-flex gap-2 align-items-center">Edit Schedule</a></li>
-                            <li><a href="{{ path('web_show_services') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Services</a></li>
-                            <li><a href="{{ path('web_edit_medic') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
-                            <li><a href="{{ path('web_medic_appointments_chart_analytics') }}" class="dropdown-item d-flex gap-2 align-items-center">Appointment Chart</a></li>
-                            <li><a href="{{ path('web_medic_services_chart_analytics') }}" class="dropdown-item d-flex gap-2 align-items-center">Services Chart</a></li>
-                            {% else %}
                             <li><a href="{{ path('web_edit_user') }}" class="dropdown-item d-flex gap-2 align-items-center">Edit Profile</a></li>
-                            {% endif %}
                             <li>
                                 <div class="actionContainer">
                                     <form
@@ -65,6 +60,7 @@
             </div>
         </div>
     </div>
+    {% endblock %}
 </header>
 
 <body>
@@ -89,7 +85,7 @@
 <footer>
     <div class="container">
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-            <div class="col-6 col-md-2 mb-3">
+            <div class="col-10">
                 <h5>Section</h5>
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ path('web_main_page') }}">Home</a></li>
@@ -99,7 +95,7 @@
                 </ul>
             </div>
             {% if app.user and app.user.isSubscribed == false %}
-            <div class="col-md-4 offset-md-5 mb-1">
+            <div class="col-2">
                 <form
                     action="{{ path('web_subscribe_newsletter') }}"
                     method="POST"
@@ -110,7 +106,7 @@
                     }) }}
                     data-action="submit-confirm#onSubmit"
                 >
-                    <button class="btn btn-sm btn-outline-dark">Subscribe to our newsletter</button>
+                    <button id="newsletter-button" class="btn btn-sm btn-outline-dark">Subscribe to our newsletter</button>
                 </form>
             </div>
             {% endif %}

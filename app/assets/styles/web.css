@@ -22,3 +22,6 @@ main {
 .carousel-item {
     height: 100%;
 }
+#newsletter-button{
+    margin-left: 1rem;
+}

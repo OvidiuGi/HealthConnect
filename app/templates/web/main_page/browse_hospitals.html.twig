@@ -1,19 +1,16 @@
 {% extends 'web/base.html.twig' %}
 
 {% block body %}
-        <div class="album py-5 bg-light">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="input-group">
-                            <div class="form-outline">
+                        <div class="d-flex justify-content-around mt-5 mb-5">
+                            <div class="col-10">
                                 <input id="search-focus" type="search" class="form-control" />
-                                <label class="form-label" for="form1"></label>
                             </div>
-                            <button type="button" class="btn btn-primary">
-                                Search
-                                <i class="fas fa-search"></i>
-                            </button>
+                            <div class="col-1">
+                                <button class="btn btn-primary">
+                                    Search
+                                </button>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2">
@@ -30,7 +27,7 @@
                                 <div class="checkbox"> <label><input type="checkbox" class="icheck"> Mobile</label>
                                 </div>
                                 </div>
-                            </div>
+
                             <div class="col-md-10">
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                                     {% for building in buildings %}
@@ -54,8 +51,7 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                            </div>
-                    </div>
+
                         {% if totalPages > 0 %}
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
@@ -71,8 +67,7 @@
                                 </ul>
                             </nav>
                         {% endif %}
-                </div>
+                    </div>
             </div>
-        </div>
 
 {% endblock %}

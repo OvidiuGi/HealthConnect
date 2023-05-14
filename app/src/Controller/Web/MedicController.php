@@ -127,4 +127,27 @@ class MedicController extends AbstractController
 
         return $this->redirectToRoute('web_medic_appointments');
     }
+
+    #[Route(path: '/medic', name: 'web_medic_main_page', methods: ['GET'])]
+    public function mainPage(): Response
+    {
+        $analytics = $this->logParser->parseLogs($this->appointmentsAnalytics);
+
+        $appointments = [];
+        $services = [];
+
+        $analytics->getByMedicId(
+                $this->getUser()->getId()
+            )
+            ->map(function ($item) use (&$appointments,&$analytics, &$services) {
+            $appointments[$item->context['date']] = $analytics->getAppointmentsByDate($item->context['date']);
+            $services[$item->context['service']] = $analytics->getAppointmentsByService($item->context['service']);
+        });
+
+
+        return $this->render('web/main_page/medic_main_page.html.twig', [
+            'appointments' => $appointments,
+            'services' => $services,
+        ]);
+    }
 }
