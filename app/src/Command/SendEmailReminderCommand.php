@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Message\AppointmentReminderNotification;
@@ -17,14 +19,13 @@ class SendEmailReminderCommand extends Command
     protected static $defaultDescription = 'Send email reminder for upcoming appointments';
 
     public function __construct(
-        private AppointmentRepository $appointmentRepository,
-        private MessageBusInterface $bus
-    )
-    {
+        private readonly AppointmentRepository $appointmentRepository,
+        private readonly MessageBusInterface $bus
+    ) {
         parent::__construct();
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

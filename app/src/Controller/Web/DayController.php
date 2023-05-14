@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Web;
 
 use App\Entity\Appointment;
@@ -18,10 +20,10 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class DayController extends AbstractController
 {
     public function __construct(
-        private DayRepository $dayRepository,
-        private ScheduleRepository $scheduleRepository,
-        private AppointmentRepository $appointmentRepository,
-        private TagAwareCacheInterface $cache
+        private readonly DayRepository         $dayRepository,
+        private readonly ScheduleRepository    $scheduleRepository,
+        private readonly AppointmentRepository $appointmentRepository,
+        private readonly TagAwareCacheInterface $cache
     ) {
     }
 
@@ -37,8 +39,8 @@ class DayController extends AbstractController
             $date = $day->getDate();
             $endTime = $day->getEndTime();
             $startTime = $day->getStartTime();
-            $endTime = $endTime->setDate($date->format('Y'), $date->format('m'), $date->format('d'));
-            $startTime = $startTime->setDate($date->format('Y'), $date->format('m'), $date->format('d'));
+            $endTime = $endTime->setDate((int)$date->format('Y'), (int)$date->format('m'), (int)$date->format('d'));
+            $startTime = $startTime->setDate((int)$date->format('Y'), (int)$date->format('m'), (int)$date->format('d'));
             $day->setEndTime($endTime);
             $day->setStartTime($startTime);
 
@@ -72,7 +74,7 @@ class DayController extends AbstractController
     {
         $day = $this->dayRepository->findOneBy(['id' => $id]);
         $appointment = new Appointment();
-        $appointment->setDoctor($this->getUser());
+        $appointment->setMedic($this->getUser());
         $appointment->setCustomer($this->getUser());
         $appointment->setDate($day->getDate());
 
@@ -109,7 +111,6 @@ class DayController extends AbstractController
     {
         $appointment = $this->appointmentRepository->findOneBy(['id' => $id]);
         if (null === $appointment) {
-
             return $this->redirectToRoute('web_show_schedules');
         }
 

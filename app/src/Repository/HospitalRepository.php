@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Building;
+use App\Entity\Hospital;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
-class BuildingRepository extends ServiceEntityRepository
+class HospitalRepository extends ServiceEntityRepository
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(ManagerRegistry $registry, EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-
-        parent::__construct($registry, Building::class);
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        ManagerRegistry $registry
+    ) {
+        parent::__construct($registry, Hospital::class);
     }
 
     public function getPaginatedFilteredSorted(array $options): array
@@ -30,24 +28,24 @@ class BuildingRepository extends ServiceEntityRepository
 
         $query = $this->entityManager
             ->createQueryBuilder()
-            ->select('b')
-            ->from('App\Entity\Building', 'b')
-            ->groupBy('b.id')
+            ->select('h')
+            ->from('App\Entity\Hospital', 'h')
+            ->groupBy('h.id')
             ->setFirstResult(($options['page'] * $options['limit']) - $options['limit'])
             ->setMaxResults($options['limit']);
 
         if (isset($options['search'])) {
-            $query->andWhere('b.name LIKE :search')->setParameter(':search', '%' .$options['search'] . '%');
+            $query->andWhere('h.name LIKE :search')->setParameter(':search', '%' . $options['search'] . '%');
         }
 
         if (isset($options['sortBy'])) {
-            $query->orderBy('b.' . $options['sortBy'], $direction);
+            $query->orderBy('h.' . $options['sortBy'], $direction);
         }
 
         return $query->getQuery()->execute();
     }
 
-    public function save(Building $entity, bool $flush = true): void
+    public function save(Hospital $entity, bool $flush = true): void
     {
         $this->entityManager->persist($entity);
         if ($flush) {

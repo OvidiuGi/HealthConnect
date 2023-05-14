@@ -25,8 +25,8 @@ class UserController extends AbstractController
     #[Route(path: "/users", name: 'admin_show_users', methods: ['GET'])]
     public function showUsers(Request $request): Response
     {
-        $paginate['page'] = (int)$request->query->get('page',1);
-        $paginate['size'] = (int)$request->query->get('size',10);
+        $paginate['page'] = (int)$request->query->get('page', 1);
+        $paginate['size'] = (int)$request->query->get('size', 10);
 
         $users = $this->userRepository->getPaginated($paginate['page'], $paginate['size']);
         $totalPages = \ceil(\count($this->userRepository->findAll()) / $paginate['size']);
@@ -42,8 +42,8 @@ class UserController extends AbstractController
     #[Route(path: "/medics", name: "admin_show_medics", methods: ["GET"])]
     public function showMedics(Request $request): Response
     {
-        $paginate['page'] = (int)$request->query->get('page',1);
-        $paginate['size'] = (int)$request->query->get('size',10);
+        $paginate['page'] = (int)$request->query->get('page', 1);
+        $paginate['size'] = (int)$request->query->get('size', 10);
 
         $users = $this->userRepository->getPaginatedMedics($paginate['page'], $paginate['size']);
         $totalPages = \ceil(\count($this->userRepository->findAll()) / $paginate['size']);
@@ -87,7 +87,11 @@ class UserController extends AbstractController
             $user = $form->getData();
 
             $this->userRepository->update($user);
-            $this->cache->invalidateTags(['browse_m_'. $user->getOffice()->getId()]);
+            $this->cache->invalidateTags([
+                'appointment_medic_id_' . $user->getId(),
+                'browse_medics_hospital_' . $user->getOffice()->getId(),
+            ]);
+
             return $this->redirectToRoute('admin_show_medics');
         }
 

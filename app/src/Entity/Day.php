@@ -6,12 +6,13 @@ namespace App\Entity;
 
 use App\Repository\DayRepository;
 use Doctrine\ORM\Mapping as ORM;
+
 #[ORM\Entity(repositoryClass: DayRepository::class)]
 #[ORM\Table(name: 'days')]
 class Day
 {
-    #[ORM\Id()]
-    #[ORM\GeneratedValue()]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 

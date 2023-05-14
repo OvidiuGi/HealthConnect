@@ -21,7 +21,7 @@ class ForgotMyPasswordController extends AbstractController
         private UserRepository $userRepository,
         private UserPasswordHasherInterface $passwordHasher,
         private MessageBusInterface $bus
-    ){
+    ) {
     }
 
     #[Route(path:"/forgot-password", name:"forgot_password", methods:["GET","POST"])]

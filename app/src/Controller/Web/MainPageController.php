@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Web;
 
-use App\Repository\BuildingRepository;
+use App\Repository\HospitalRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -15,20 +16,19 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class MainPageController extends AbstractController
 {
     public function __construct(
-        private BuildingRepository $buildingRepository,
+        private HospitalRepository $hospitalRepository,
         private TagAwareCacheInterface $cache
-    ){
+    ) {
     }
 
     #[Route(path: '/', name: 'web_main_page', methods: ['GET'])]
     public function load(): Response
     {
-        if($this->isGranted('ROLE_USER')){
-            $cacheKey = 'main_page_'.$this->getUser()->getId();
+        if ($this->isGranted('ROLE_USER')) {
+            $cacheKey = 'main_page_' . $this->getUser()->getId();
 
             return $this->cache->get($cacheKey, function (ItemInterface $item) {
                 $item->expiresAfter(43200);
-                $item->tag('main_p');
 
                 return $this->render('web/main_page/main_page.html.twig');
             });
@@ -36,7 +36,6 @@ class MainPageController extends AbstractController
 
         return $this->cache->get('main_page', function (ItemInterface $item) {
             $item->expiresAfter(43200);
-            $item->tag('main_p');
 
             return $this->render('web/main_page/main_page.html.twig');
         });
@@ -53,8 +52,8 @@ class MainPageController extends AbstractController
         $options['search'] = $request->query->get('search');
 
         return $this->render('web/main_page/browse_hospitals.html.twig', [
-            'buildings' => $this->buildingRepository->getPaginatedFilteredSorted($options),
-            'totalPages' => \ceil(\count($this->buildingRepository->findAll()) / $options['limit']),
+            'hospitals' => $this->hospitalRepository->getPaginatedFilteredSorted($options),
+            'totalPages' => \ceil(\count($this->hospitalRepository->findAll()) / $options['limit']),
         ]);
     }
 }

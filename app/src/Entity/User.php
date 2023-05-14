@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Dto\UserDto;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,29 +26,37 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public const ROLE_MEDIC = 'ROLE_MEDIC';
 
-    public const ROLES = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_MEDIC'];
+    public const ROLES = [self::ROLE_USER, self::ROLE_MEDIC, self::ROLE_ADMIN];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter your first name', groups: ['create-user', 'edit-user', 'edit-medic'])]
     #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $firstName = '';
 
-    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: false)]
     #[Assert\NotBlank(message: 'Please enter your last name', groups: ['create-user', 'edit-user', 'edit-medic'])]
     #[Assert\Regex("/^[A-Z][a-z]+$/", groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $lastName = '';
 
-    #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\Email(message:'Please enter a valid email', groups: ['create-user', 'edit-user', 'forgot-password', 'edit-medic'])]
+    #[ORM\Column(type: 'string', length: 256, unique: true, nullable: false)]
+    #[Assert\Email(
+        message:'Please enter a valid email',
+        groups: [
+            'create-user',
+            'edit-user',
+            'forgot-password',
+            'edit-medic'
+        ]
+    )]
     #[Assert\NotBlank(message: 'Please enter an email', groups: ['create-user', 'forgot-password', 'edit-medic'])]
     public string $email = '';
 
-    #[ORM\Column(type: 'string', length: 256, unique: true)]
+    #[ORM\Column(type: 'string', length: 256, unique: true, nullable: false)]
     public string $password = '';
 
     #[Assert\NotBlank(message: 'Please enter a password', groups: ['create-user', 'reset-password'])]
@@ -57,7 +64,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public string $plainPassword = '';
 
     #[ORM\Column(type: 'string', length: 256, unique: true)]
-    #[Assert\NotBlank(message: 'Please enter your telephone number', groups: ['create-user', 'edit-user', 'edit-medic'])]
+    #[Assert\NotBlank(
+        message: 'Please enter your telephone number',
+        groups: [
+            'create-user',
+            'edit-user',
+            'edit-medic'
+        ]
+    )]
     #[MyAssert\TelephoneNumber(groups: ['create-user', 'edit-user', 'edit-medic'])]
     public string $telephoneNr = '';
 
@@ -70,17 +84,17 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Appointment::class)]
     private Collection $appointments;
 
-    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: false)]
     #[Assert\Choice(choices: User::ROLES, multiple: false)]
     public string $role = '';
 
-    // Many Doctors work at One Building.
-    #[ORM\ManyToOne(targetEntity: Building::class, inversedBy: 'doctors')]
-    #[ORM\JoinColumn(name: 'building_id', nullable: true, onDelete: 'CASCADE')]
-    private ?Building $office;
+    // Many Medics work at One Hospital.
+    #[ORM\ManyToOne(targetEntity: Hospital::class, inversedBy: 'medics')]
+    #[ORM\JoinColumn(name: 'hospital_id', nullable: true, onDelete: 'CASCADE')]
+    private ?Hospital $office;
 
-    // One Doctor has Many Services.
-    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Service::class)]
+    // One Medic has Many Services.
+    #[ORM\OneToMany(mappedBy: 'medic', targetEntity: Service::class)]
     private Collection $services;
 
     #[ORM\Column(type: 'string', length: 256, unique: false)]
@@ -91,8 +105,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[Assert\GreaterThanOrEqual(value: 0, groups: ['edit-medic'])]
     public ?int $experience = 0;
 
-    // One Doctor has Many Schedules.
-    #[ORM\OneToMany(mappedBy: 'doctor', targetEntity: Schedule::class)]
+    // One Medic has Many Schedules.
+    #[ORM\OneToMany(mappedBy: 'medic', targetEntity: Schedule::class)]
     private ?Collection $schedules;
 
     #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true)]
@@ -165,7 +179,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         if (!$this->services->contains($service)) {
             $this->services[] = $service;
-            $service->addDoctor($this);
+            $service->setMedic($this);
         }
 
         return $this;
@@ -174,36 +188,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function removeService(Service $service): self
     {
         if ($this->services->removeElement($service)) {
-            $service->removeDoctor($this);
+            $service->setMedic(null);
         }
 
         return $this;
     }
 
-    public function setOffice(?Building $office): self
+    public function setOffice(?Hospital $office): self
     {
         $this->office = $office;
 
         return $this;
     }
 
-    public function getOffice(): ?Building
+    public function getOffice(): ?Hospital
     {
         return $this->office;
-    }
-
-    public static function createFromUserDto(UserDto $dto): self
-    {
-        $user = new self();
-        $user->firstName = $dto->firstName;
-        $user->lastName = $dto->lastName;
-        $user->email = $dto->email;
-        $user->plainPassword = $dto->password;
-        $user->telephoneNr = $dto->telephoneNr;
-        $user->cnp = $dto->cnp;
-        $user->role = $dto->role;
-
-        return $user;
     }
 
     public function getPassword(): ?string
@@ -241,7 +241,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         if (!$this->schedules->contains($schedule)) {
             $this->schedules->add($schedule);
-            $schedule->setDoctor($this);
+            $schedule->setMedic($this);
         }
 
         return $this;
@@ -254,7 +254,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         }
 
         $this->schedules->removeElement($schedule);
-        $schedule->setDoctor(null);
+        $schedule->setMedic(null);
 
         return $this;
     }

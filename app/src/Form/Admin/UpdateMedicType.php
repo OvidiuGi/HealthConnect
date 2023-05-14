@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\Admin;
 
-use App\Entity\Building;
+use App\Entity\Hospital;
 use App\Entity\User;
-use App\Repository\BuildingRepository;
+use App\Repository\HospitalRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -14,11 +16,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UpdateMedicType extends AbstractType
 {
-    private BuildingRepository $buildingRepository;
-
-    public function __construct(BuildingRepository $buildingRepository)
-    {
-        $this->buildingRepository = $buildingRepository;
+    public function __construct(
+        private readonly HospitalRepository $hospitalRepository
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -31,10 +31,10 @@ class UpdateMedicType extends AbstractType
             ->add('specialization', TextType::class)
             ->add('experience', NumberType::class)
             ->add('office', EntityType::class, [
-                'class' => 'App\Entity\Building',
-                'choices' => $this->buildingRepository->findAll(),
-                'choice_label' => function(Building $building) {
-                    return $building->name;
+                'class' => 'App\Entity\Hospital',
+                'choices' => $this->hospitalRepository->findAll(),
+                'choice_label' => function (Hospital $hospital) {
+                    return $hospital->name;
                 },
             ])
         ;

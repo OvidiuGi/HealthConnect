@@ -7,7 +7,6 @@ namespace App\Controller\Web;
 use App\Entity\User;
 use App\Form\ResetMyPasswordType;
 use App\Form\Web\UpdateUserType;
-use App\Repository\AppointmentRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,10 +21,9 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class UserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private AppointmentRepository $appointmentRepository,
-        private UserPasswordHasherInterface $passwordHasher,
-        private TagAwareCacheInterface $cache
+        private readonly UserRepository              $userRepository,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly TagAwareCacheInterface $cache
     ) {
     }
 
@@ -53,9 +51,9 @@ class UserController extends AbstractController
     public function getMedicsByHospitalId(int $id): Response
     {
         $cacheTag = 'browse_medics_hospital_' . $id;
-        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($id) {
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($id, $cacheTag) {
             $item->expiresAfter(43200);
-
+            $item->tag($cacheTag);
             return $this->render('web/user/show_medics.html.twig', [
                 'medics' => $this->userRepository->findBy(['office' => $id]),
             ]);
@@ -86,7 +84,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->password = $this->passwordHasher->hashPassword($user, $form->getData()->plainPassword);
             $this->userRepository->save($user);
 

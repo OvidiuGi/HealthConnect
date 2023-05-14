@@ -20,7 +20,7 @@ class DayRepository extends ServiceEntityRepository
         parent::__construct($registry, Day::class);
     }
 
-    public function getDatesByDoctorId(int $doctorId): array
+    public function getDatesByMedicId(int $medicId): array
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -28,8 +28,8 @@ class DayRepository extends ServiceEntityRepository
             ->from('App\Entity\Day', 'd')
             ->join('App\Entity\Schedule', 's')
             ->where('d.schedule = s.id')
-            ->andWhere('s.doctor = :doctorId')
-            ->setParameter('doctorId', $doctorId)
+            ->andWhere('s.medic = :medicId')
+            ->setParameter('medicId', $medicId)
             ->getQuery()
             ->execute();
     }

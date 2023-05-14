@@ -45,5 +45,4 @@ class UserRegisterFormType extends AbstractType
             'validation_groups' => ['create-user']
         ]);
     }
-
 }

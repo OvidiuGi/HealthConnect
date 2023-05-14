@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\AppointmentRepository;
@@ -10,10 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'appointments')]
 class Appointment
 {
-    public const CACHE_TAG = 'appointment_';
-
-    #[ORM\Id()]
-    #[ORM\GeneratedValue()]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
@@ -34,12 +34,13 @@ class Appointment
     #[ORM\JoinColumn(name: 'service_id', referencedColumnName: 'id')]
     public ?Service $service;
 
-    // Many Appointment have one Doctor.
+    // Many Appointment have one Medic.
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    private ?User $doctor;
+    #[ORM\JoinColumn(name: 'medic_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private ?User $medic;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: false)]
+    #[Assert\NotBlank(message: 'Please select the date')]
     private ?\DateTimeImmutable $date;
 
     #[ORM\Column(type: 'boolean', nullable: false)]
@@ -74,14 +75,14 @@ class Appointment
         return $this;
     }
 
-    public function getDoctor(): ?User
+    public function getMedic(): ?User
     {
-        return $this->doctor ?? null;
+        return $this->medic ?? null;
     }
 
-    public function setDoctor(?User $doctor): self
+    public function setMedic(?User $medic): self
     {
-        $this->doctor = $doctor;
+        $this->medic = $medic;
 
         return $this;
     }

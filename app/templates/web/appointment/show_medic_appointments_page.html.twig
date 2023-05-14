@@ -27,8 +27,8 @@
                         <td>{{appointment.id}}</td>
                         <td><a class="nav-link text-secondary" href="#">{{appointment.service.name}}</a></td>
                         <td><a class="nav-link text-secondary" href="#">{{ appointment.customer.firstName }} {{ appointment.customer.lastName }}</a></td>
-                        <td>{{ appointment.doctor.office.city }}</td>
-                        <td>{{ appointment.doctor.office.address }}</td>
+                        <td>{{ appointment.medic.office.city }}</td>
+                        <td>{{ appointment.medic.office.address }}</td>
                         <td>{{ appointment.date.format('d/m/Y') }}</td>
                         <td>{{ appointment.startTime.format('H:i') }}</td>
                         <td>{{ appointment.endTime.format('H:i') }}</td>

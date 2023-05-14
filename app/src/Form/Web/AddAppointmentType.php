@@ -35,15 +35,15 @@ class AddAppointmentType extends AbstractType
         $builder->add('service', EntityType::class, [
             'placeholder' => 'Select a service',
             'class' => 'App\Entity\Service',
-            'choices' => $this->userRepository->getDoctorServices($currentRequest->get('id')),
-            'choice_label' => function(Service $service) {
+            'choices' => $this->userRepository->getMedicServices($currentRequest->get('id')),
+            'choice_label' => function (Service $service) {
                 return $service->name;
             }
         ])
             ->add('date', ChoiceType::class, [
                 'placeholder' => 'Select a date',
-                'choices' => $this->scheduleRepository->getDoctorDays($currentRequest->get('id')),
-                'choice_label' => function(\DateTimeImmutable $value) {
+                'choices' => $this->scheduleRepository->getMedicDays($currentRequest->get('id')),
+                'choice_label' => function (\DateTimeImmutable $value) {
                     return $value->format('Y-m-d');
                 }
             ]);
@@ -53,7 +53,7 @@ class AddAppointmentType extends AbstractType
             $form->add('startTime', ChoiceType::class, [
                 'placeholder' => 'Select a time',
                 'choices' => $choices,
-                'choice_label' => function($choice) {
+                'choice_label' => function ($choice) {
                     if ($choice instanceof \DateTimeImmutable) {
                         return $choice->format('H:i');
                     }
@@ -88,7 +88,7 @@ class AddAppointmentType extends AbstractType
         ]);
     }
 
-    private function getIntervalsByServiceId(?\DateTimeImmutable $date,int $duration): array
+    private function getIntervalsByServiceId(?\DateTimeImmutable $date, int $duration): array
     {
         if (!$date) {
             return [];
@@ -98,13 +98,12 @@ class AddAppointmentType extends AbstractType
         $result = [];
         $startTime = $day->getStartTime();
 
-        while($startTime < $day->getEndTime()) {
+        while ($startTime < $day->getEndTime()) {
             $oldStartTime = $startTime;
             $startTime = \DateTimeImmutable::createFromMutable(date_add(\DateTime::createFromImmutable($startTime), date_interval_create_from_date_string($duration . ' minutes')));
-            if (!$this->isIntervalBusy($date,$oldStartTime, $startTime)) {
+            if (!$this->isIntervalBusy($date, $oldStartTime, $startTime)) {
                 $result[] = $oldStartTime;
             }
-
         }
 
         return $result;

@@ -52,10 +52,10 @@ class ServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Service $service */
             $service = $form->getData();
-            $service->setDoctor($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
-            $this->cache->invalidateTags(['service_id_' . $service->getId()]);
-
+            $service->setMedic($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
             $this->serviceRepository->save($service);
+
+            $this->cache->invalidateTags(['service_id_' . $service->getId()]);
 
             return $this->redirectToRoute('web_show_services');
         }
@@ -71,7 +71,6 @@ class ServiceController extends AbstractController
     {
         $service = $this->serviceRepository->findOneBy(['id' => $id]);
         if (null === $service) {
-
             return $this->redirectToRoute('web_show_services');
         }
 

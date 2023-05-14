@@ -33,14 +33,13 @@ class ScheduleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $schedule = $form->getData();
-            $schedule->setDoctor($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
+            $schedule->setMedic($this->userRepository->findOneBy(['id' => $this->getUser()->getId()]));
             if ($this->scheduleRepository->findBy([
-                'doctor' => $this->getUser(),
+                'medic' => $this->getUser(),
                 'startDate' => $schedule->getStartDate(),
                 'endDate' => $schedule->getEndDate()
-            ])) {
-                $this->addFlash('error', 'You already have a schedule for this dates');
-
+                ])
+            ) {
                 return $this->redirectToRoute('web_show_schedules');
             }
 
@@ -61,9 +60,9 @@ class ScheduleController extends AbstractController
         $cacheTag = 'schedules_medic_id_' . $this->getUser()->getId();
 
         return $this->cache->get($cacheTag, function (ItemInterface $item) use ($cacheTag) {
-            $schedules  = $this->scheduleRepository->findBy(['doctor' => $this->getUser()]);
+            $schedules  = $this->scheduleRepository->findBy(['medic' => $this->getUser()]);
             $item->expiresAfter(43200);
-
+            $item->tag($cacheTag);
             foreach ($schedules as $schedule) {
                 $item->tag('schedule_id_' . $schedule->getId());
             }
@@ -99,14 +98,11 @@ class ScheduleController extends AbstractController
     {
         $schedule = $this->scheduleRepository->findOneBy(['id' => $id]);
         if (null === $schedule) {
-            $this->addFlash('error','Schedule not found');
-
             return $this->redirectToRoute('web_show_schedules');
         }
 
         $this->scheduleRepository->delete($schedule);
-        $this->cache->invalidateTags(['schedule_id' . $id]);
-        $this->addFlash('success','Schedule deleted successfully');
+        $this->cache->invalidateTags(['schedule_id_' . $id]);
 
         return $this->redirectToRoute('web_show_schedules');
     }

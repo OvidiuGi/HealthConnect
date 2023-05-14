@@ -31,7 +31,7 @@ class AddDayType extends AbstractType
         $builder->add('date', ChoiceType::class, [
             'placeholder' => 'Choose a date',
             'choices' => $this->scheduleRepository->getAvailableDates($currentRequest->get('id')),
-            'choice_label' => function($choice) {
+            'choice_label' => function ($choice) {
                 return $choice->format('d-m-Y');
             }
         ])

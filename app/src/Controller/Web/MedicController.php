@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Web;
 
 use App\Analytics\AppointmentsAnalytics;
@@ -17,11 +19,11 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class MedicController extends AbstractController
 {
     public function __construct(
-        private AppointmentRepository $appointmentRepository,
-        private UserRepository $userRepository,
-        private LogParser $logParser,
-        private AppointmentsAnalytics $appointmentsAnalytics,
-        private TagAwareCacheInterface $cache,
+        private readonly AppointmentRepository  $appointmentRepository,
+        private readonly UserRepository         $userRepository,
+        private readonly LogParser              $logParser,
+        private readonly AppointmentsAnalytics  $appointmentsAnalytics,
+        private readonly TagAwareCacheInterface $cache,
     ) {
     }
     #[Route(path: '/medic/appointments', name: 'web_medic_appointments', methods: ['GET'])]
@@ -30,8 +32,8 @@ class MedicController extends AbstractController
         $cacheTag = 'show_medic_appointments_' . $this->getUser()->getId();
 
         return $this->cache->get($cacheTag, function (ItemInterface $item) use ($request, $cacheTag) {
-            $paginate['page'] = (int)$request->query->get('page',1);
-            $paginate['size'] = (int)$request->query->get('size',10);
+            $paginate['page'] = (int)$request->query->get('page', 1);
+            $paginate['size'] = (int)$request->query->get('size', 10);
 
             $appointments = $this
                 ->appointmentRepository
@@ -44,7 +46,7 @@ class MedicController extends AbstractController
 
             foreach ($appointments as $appointment) {
                 $identities[] = 'appointment_id_' . $appointment->getId();
-                $identities[] = 'appointment_doctor_id_' . $appointment->getDoctor()->getId();
+                $identities[] = 'appointment_medic_id_' . $appointment->getMedic()->getId();
                 $identities[] = 'appointment_customer_id_' . $appointment->getCustomer()->getId();
                 $identities[] = 'appointment_service_id_' . $appointment->getService()->getId();
                 $identities[] = 'appointment_is_completed_' . $appointment->getId();
@@ -71,7 +73,7 @@ class MedicController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
             $this->cache->invalidateTags([
-                'appointment_doctor_id_' . $user->getId(),
+                'appointment_medic_id_' . $user->getId(),
                 'browse_medics_hospital_' . $user->getOffice()->getId(),
             ]);
             $this->userRepository->update($user);
@@ -89,7 +91,7 @@ class MedicController extends AbstractController
 
         $appointments = [];
 
-        $analytics->getByMedicId($this->getUser()->getId())->map(function ($item) use (&$appointments,&$analytics) {
+        $analytics->getByMedicId($this->getUser()->getId())->map(function ($item) use (&$appointments, &$analytics) {
             $appointments[$item->context['date']] = $analytics->getAppointmentsByDate($item->context['date']);
         });
 
@@ -103,7 +105,7 @@ class MedicController extends AbstractController
 
         $services = [];
 
-        $analytics->getByMedicId($this->getUser()->getId())->map(function ($item) use (&$services,&$analytics) {
+        $analytics->getByMedicId($this->getUser()->getId())->map(function ($item) use (&$services, &$analytics) {
             $services[$item->context['service']] = $analytics->getAppointmentsByService($item->context['service']);
         });
 
@@ -115,15 +117,12 @@ class MedicController extends AbstractController
     {
         $appointment = $this->appointmentRepository->findOneBy(['id' => $id]);
         if (null === $appointment) {
-            $this->addFlash('error','Appointment not found');
-
             return $this->redirectToRoute('web_show_appointments');
         }
         $this->cache->invalidateTags([
             'appointment_id_' . $appointment->getId()
         ]);
         $this->appointmentRepository->delete($appointment);
-        $this->addFlash('success','Appointment deleted successfully');
 
         return $this->redirectToRoute('web_medic_appointments');
     }
@@ -137,12 +136,12 @@ class MedicController extends AbstractController
         $services = [];
 
         $analytics->getByMedicId(
-                $this->getUser()->getId()
-            )
-            ->map(function ($item) use (&$appointments,&$analytics, &$services) {
-            $appointments[$item->context['date']] = $analytics->getAppointmentsByDate($item->context['date']);
-            $services[$item->context['service']] = $analytics->getAppointmentsByService($item->context['service']);
-        });
+            $this->getUser()->getId()
+        )
+            ->map(function ($item) use (&$appointments, &$analytics, &$services) {
+                $appointments[$item->context['date']] = $analytics->getAppointmentsByDate($item->context['date']);
+                $services[$item->context['service']] = $analytics->getAppointmentsByService($item->context['service']);
+            });
 
 
         return $this->render('web/main_page/medic_main_page.html.twig', [

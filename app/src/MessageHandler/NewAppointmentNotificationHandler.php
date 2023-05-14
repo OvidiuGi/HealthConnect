@@ -20,7 +20,20 @@ class NewAppointmentNotificationHandler
         $file = fopen('appointment.ics', 'w');
 
         //create .ics file
-        $ical = "BEGIN:VCALENDAR\nPRODID:-//Sales//Appointment//EN\nVERSION:2.0\nBEGIN:VEVENT\nUID:" . Uuid::v4(). "@sales.com\nDTSTART;TZID=Europe/Bucharest:" . $notification->getAppointmentDate() . "T" . $notification->getAppointmentTime() . "\nDURATION:PT" . $notification->getDuration() . "M\nSUMMARY:Appointment reminder\nDESCRIPTION: Service: ". $notification->getService()."\nLOCATION:". $notification->getLocation()."\nEND:VEVENT\nEND:VCALENDAR";
+        $ical = "
+            BEGIN:VCALENDAR\n
+            PRODID:-//Sales//Appointment//EN\n
+            VERSION:2.0\n
+            BEGIN:VEVENT\n
+            UID:" . Uuid::v4() . "@sales.com\n
+            DTSTART;TZID=Europe/Bucharest:" . $notification->getAppointmentDate() . "T" . $notification->getAppointmentTime() . "\n
+            DURATION:PT" . $notification->getDuration() . "M\n
+            SUMMARY:Appointment reminder\n
+            DESCRIPTION: Service: " . $notification->getService() . "\n
+            LOCATION:" . $notification->getLocation() . "\n
+            END:VEVENT\n
+            END:VCALENDAR
+        ";
         $ical = trim($ical, ' ');
         fwrite($file, $ical);
         fclose($file);
@@ -29,7 +42,10 @@ class NewAppointmentNotificationHandler
             ->from('licenta@sales.com')
             ->to($notification->getCustomerEmail())
             ->subject('New Appointment Confirmation Email')
-            ->text('Your appointment has been confirmed! Please find the attached .ics file with the date of the appointment.')
+            ->text(
+                'Your appointment has been confirmed!
+                Please find the attached .ics file with the date of the appointment.'
+            )
             ->attach(fopen('appointment.ics', 'r'), 'appointment.ics', 'text/calendar');
 
         $this->mailer->send($email);

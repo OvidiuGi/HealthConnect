@@ -27,7 +27,7 @@ class NewAppointmentNotification
 
     public function getAppointmentTime(): string
     {
-        return $this->appointment->getStartTime()->format('Hi'). $this->appointment->getEndTime()->format('Hi') . '00';
+        return $this->appointment->getStartTime()->format('Hi') . $this->appointment->getEndTime()->format('Hi') . '00';
     }
 
     public function getService(): string
@@ -37,7 +37,7 @@ class NewAppointmentNotification
 
     public function getLocation(): string
     {
-        return $this->appointment->getDoctor()->getOffice()->address;
+        return $this->appointment->getMedic()->getOffice()->address;
     }
 
     public function getDuration(): string

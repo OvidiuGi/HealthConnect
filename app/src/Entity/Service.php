@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ServiceRepository;
@@ -11,24 +13,24 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: '`service`')]
 class Service
 {
-    #[ORM\Id()]
-    #[ORM\GeneratedValue()]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', length: 256, unique: true)]
+    #[ORM\Column(type: 'string', length: 256, unique: true, nullable: false)]
     public string $name = '';
 
-    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: false)]
     public string $price = '';
 
-    #[ORM\Column(type: 'string', length: 256, unique: false)]
+    #[ORM\Column(type: 'string', length: 256, unique: false, nullable: false)]
     public string $description = '';
 
-    // One Doctor has many Schedules.
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'schedules')]
-    #[ORM\JoinColumn(name: 'doctor_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
-    private User $doctor;
+    // One Medic has many Services.
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'services')]
+    #[ORM\JoinColumn(name: 'medic_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    private ?User $medic;
 
     #[ORM\Column(type: 'integer', length: 256, unique: false)]
     public int $duration = 0;
@@ -38,14 +40,14 @@ class Service
         return $this->id;
     }
 
-    public function getDoctor(): User
+    public function getMedic(): ?User
     {
-        return $this->doctor;
+        return $this->medic;
     }
 
-    public function setDoctor(User $doctor): self
+    public function setMedic(?User $medic): self
     {
-        $this->doctor = $doctor;
+        $this->medic = $medic;
 
         return $this;
     }

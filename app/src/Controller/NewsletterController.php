@@ -16,10 +16,11 @@ use Symfony\Contracts\Cache\CacheInterface;
 class NewsletterController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
+        private UserRepository      $userRepository,
         private MessageBusInterface $bus,
-        private CacheInterface $cache
-    ) {
+        private CacheInterface      $cache
+    )
+    {
     }
 
     #[Route(path: '/admin/newsletter/send', name: 'admin_send_newsletter', methods: ['GET', 'POST'])]
@@ -32,7 +33,7 @@ class NewsletterController extends AbstractController
             $data = $form->getData();
             $users = $this->userRepository->findBy(['isSubscribed' => true]);
             foreach ($users as $user) {
-               $this->bus->dispatch(new NewsletterNotification($user, $data['content'], $data['subject']));
+                $this->bus->dispatch(new NewsletterNotification($user, $data['content'], $data['subject']));
             }
         }
 
@@ -49,7 +50,7 @@ class NewsletterController extends AbstractController
         $user->isSubscribed = true;
         $this->userRepository->update($user);
 
-        $this->cache->delete('main_page_'. $this->getUser()->getId());
+        $this->cache->delete('main_page_' . $user->getId());
 
         return $this->redirectToRoute('web_main_page');
     }

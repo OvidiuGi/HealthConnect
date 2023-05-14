@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Analytics;
 
 use App\Dto\AnalyticsDto;
@@ -8,17 +10,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class LogParser
 {
     public function __construct(
-        private string $analyticsLogFile,
-        private SerializerInterface $serializer
+        private readonly string $analyticsLogFile,
+        private readonly SerializerInterface $serializer
     ) {
     }
 
-    // number of appointments
-    // number of accounts created by role
-    // number of logins by role
     public function parseLogs(AnalyticsCollectionInterface $analyticsCollection): AnalyticsCollectionInterface
     {
-        $handler = \fopen($this->analyticsLogFile, 'r',true);
+        $handler = \fopen($this->analyticsLogFile, 'r', true);
         $line = \fgets($handler);
         while ($line != null) {
             $analyticsCollection->add(

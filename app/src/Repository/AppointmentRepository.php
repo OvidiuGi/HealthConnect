@@ -76,7 +76,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('a')
             ->from('App\Entity\Appointment', 'a')
-            ->where('a.doctor = :medicId')
+            ->where('a.medic = :medicId')
             ->andWhere('a.service IS NOT NULL')
             ->groupBy('a.id')
             ->setParameter('medicId', $medicId)

@@ -13,7 +13,7 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Service</th>
-                    <th scope="col">Doctor</th>
+                    <th scope="col">Medic</th>
                     <th scope="col">City</th>
                     <th scope="col">Address</th>
                     <th scope="col">Date</th>
@@ -28,9 +28,9 @@
                     <tr>
                         <td>{{appointment.id}}</td>
                         <td><a class="nav-link text-secondary" href="#">{{appointment.service.name}}</a></td>
-                        <td><a class="nav-link text-secondary" href="#">{{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}</a></td>
-                        <td>{{ appointment.doctor.office.city }}</td>
-                        <td>{{ appointment.doctor.office.address }}</td>
+                        <td><a class="nav-link text-secondary" href="#">{{ appointment.medic.firstName }} {{ appointment.medic.lastName }}</a></td>
+                        <td>{{ appointment.medic.office.city }}</td>
+                        <td>{{ appointment.medic.office.address }}</td>
                         <td>{{ appointment.date.format('d/m/Y') }}</td>
                         <td>{{ appointment.startTime.format('H:i') }}</td>
                         <td>{{ appointment.endTime.format('H:i') }}</td>

@@ -5,7 +5,7 @@
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-bottom">
             <h1 class="h2">Hospitals</h1>
             <div class="actionContainer">
-                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_add_building')}}"> New</a>
+                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_add_hospital')}}"> New</a>
             </div>
         </div>
         <div class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 table-responsive">
@@ -20,16 +20,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for building in buildings%}
+                {% for hospital in hospitals%}
                     <tr>
-                        <td>{{building.id}}</td>
-                        <td>{{ building.address }}</td>
-                        <td>{{ building.city }}</td>
-                        <td>{{ building.startHour.format('H:i') }}</td>
-                        <td>{{ building.endHour.format('H:i') }}</td>
+                        <td>{{hospital.id}}</td>
+                        <td>{{ hospital.address }}</td>
+                        <td>{{ hospital.city }}</td>
+                        <td>{{ hospital.startHour.format('H:i') }}</td>
+                        <td>{{ hospital.endHour.format('H:i') }}</td>
                         <td>
                             <div class="actionContainer">
-                                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_edit_buildings',{'id': building.id})}}"> Edit</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="{{path('admin_edit_hospitals',{'id': hospital.id})}}"> Edit</a>
                                 <a type="button" class="btn-close btn btn-sm btn-outline-secondary" href="#" aria-label="Close"></a>
                             </div>
                         </td>
@@ -46,7 +46,7 @@
                 <a href="#" class="nav-link text-secondary page-link">Previous</a>
             </li>
             {% for i in 1..totalPages%}
-                <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('admin_show_buildings') }}?page={{i}}">{{i}}</a></li>
+                <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('admin_show_hospitals') }}?page={{i}}">{{i}}</a></li>
             {%endfor%}
             <li class="page-item">
                 <a href="#" class="nav-link text-secondary page-link">Next</a>

@@ -35,8 +35,8 @@ class AppointmentReminderNotification
         return $this->appointment->timeInterval;
     }
 
-    public function getDoctorName(): string
+    public function getMedicName(): string
     {
-        return $this->appointment->getDoctor()->firstName . ' ' . $this->appointment->getDoctor()->lastName;
+        return $this->appointment->getMedic()->firstName . ' ' . $this->appointment->getMedic()->lastName;
     }
 }

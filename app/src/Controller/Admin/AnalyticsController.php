@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Analytics\AccountsAnalytics;
@@ -13,8 +15,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class AnalyticsController extends AbstractController
 {
     public function __construct(
-        private LogParser $logParser,
-        private AccountsAnalytics $accountsAnalytics,
+        private readonly LogParser         $logParser,
+        private readonly AccountsAnalytics $accountsAnalytics,
     ) {
     }
 
@@ -27,6 +29,7 @@ class AnalyticsController extends AbstractController
         $accounts = [];
 
         array_map(function ($role) use (&$analytics, &$accounts) {
+            /** @var AccountsAnalytics $analytics  */
             $accounts[$role] = $analytics->getAccountsByRole($role);
         }, User::ROLES);
 

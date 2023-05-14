@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Repository\ScheduleRepository;
@@ -14,7 +16,7 @@ class DeletePastDueDateSchedulesCommand extends Command
 
     protected static $defaultDescription = 'Delete past due date schedules as past due date';
 
-    public function __construct(private ScheduleRepository $scheduleRepository)
+    public function __construct(private readonly ScheduleRepository $scheduleRepository)
     {
         parent::__construct();
     }
@@ -31,7 +33,7 @@ class DeletePastDueDateSchedulesCommand extends Command
             }
         }
 
-        $io->success('Succesfully deleted past due schedules.');
+        $io->success('Successfully deleted past due schedules.');
 
         return Command::SUCCESS;
     }

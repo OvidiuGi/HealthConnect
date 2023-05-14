@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Repository\AppointmentRepository;
@@ -14,12 +16,12 @@ class MarkCompletedAppointmentsCommand extends Command
 
     protected static $defaultDescription = 'Marks completed appointments as completed';
 
-    public function __construct(private AppointmentRepository $appointmentRepository)
+    public function __construct(private readonly AppointmentRepository $appointmentRepository)
     {
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

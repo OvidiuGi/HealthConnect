@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Analytics;
 
 use App\Dto\AnalyticsDto;
@@ -8,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class AppointmentsAnalytics implements AnalyticsCollectionInterface
 {
     public function __construct(
-        private ArrayCollection $appointments = new ArrayCollection()
+        private readonly ArrayCollection $appointments = new ArrayCollection()
     ) {
     }
 
@@ -24,14 +26,17 @@ class AppointmentsAnalytics implements AnalyticsCollectionInterface
         return $this->appointments;
     }
 
-    public function getAppointmentsByDoctorId(int $id): int
+    public function getAppointmentsByMedicId(int $id): int
     {
-        return $this->appointments->filter(fn (AnalyticsDto $dto) => $dto->context['doctorId'] === $id)->count();
+        return $this->appointments->filter(fn (AnalyticsDto $dto) => $dto->context['medicId'] === $id)->count();
     }
 
     public function getAppointmentsByDateInterval(\DateTimeInterface $start, \DateTimeInterface $end): int
     {
-        return $this->appointments->filter(fn (AnalyticsDto $dto) => $dto->context['date'] >= $start && $dto->context['date'] <= $end)->count();
+        return $this->appointments->filter(
+            fn (AnalyticsDto $dto) =>
+            $dto->context['date'] >= $start && $dto->context['date'] <= $end
+        )->count();
     }
 
     public function getAppointmentsByDate(string $date): int
@@ -41,7 +46,7 @@ class AppointmentsAnalytics implements AnalyticsCollectionInterface
 
     public function getByMedicId(int $id): ArrayCollection
     {
-        return $this->appointments->filter(fn (AnalyticsDto $dto) => $dto->context['doctorId'] === $id);
+        return $this->appointments->filter(fn (AnalyticsDto $dto) => $dto->context['medicId'] === $id);
     }
 
     public function getAppointmentsByService(string $service): int

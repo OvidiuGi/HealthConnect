@@ -40,7 +40,7 @@ class ScheduleRepository extends ServiceEntityRepository
         }
     }
 
-    public function getDoctorDays(int $doctorId): array
+    public function getMedicDays(int $medicId): array
     {
         $result =  $this->entityManager
             ->createQueryBuilder()
@@ -48,8 +48,8 @@ class ScheduleRepository extends ServiceEntityRepository
             ->from('App\Entity\Day', 'd')
             ->join('App\Entity\Schedule', 's')
             ->where('d.schedule = s.id')
-            ->andWhere('s.doctor = :doctorId')
-            ->setParameter('doctorId', $doctorId)
+            ->andWhere('s.medic = :medicId')
+            ->setParameter('medicId', $medicId)
             ->getQuery()
             ->execute();
 
@@ -68,7 +68,7 @@ class ScheduleRepository extends ServiceEntityRepository
         while ($currentDay <= $schedule->getEndDate()) {
             if ($schedule->getDays()->count() === 0) {
                 $result[] = $currentDay;
-            } else if ($this->isDayAvailable($schedule, $currentDay)) {
+            } elseif ($this->isDayAvailable($schedule, $currentDay)) {
                 $result[] = $currentDay;
             }
 
@@ -91,6 +91,6 @@ class ScheduleRepository extends ServiceEntityRepository
     public function getPossibleDaysNumber(int $id): int
     {
         $schedule = $this->findOneBy(['id' => $id]);
-        return $schedule->getStartDate()->diff($schedule->getEndDate())->days+1;
+        return $schedule->getStartDate()->diff($schedule->getEndDate())->days + 1;
     }
 }

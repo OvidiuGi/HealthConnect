@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Analytics;
 
 use App\Dto\AnalyticsDto;
@@ -8,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class AccountsAnalytics implements AnalyticsCollectionInterface
 {
     public function __construct(
-        private ArrayCollection $accounts = new ArrayCollection()
+        private readonly ArrayCollection $accounts = new ArrayCollection()
     ) {
     }
 

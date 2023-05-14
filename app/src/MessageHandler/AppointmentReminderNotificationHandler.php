@@ -26,7 +26,7 @@ class AppointmentReminderNotificationHandler
             Hello, we want to remind you that the appointment is scheduled in {$notification->getRemainingHours()} hours.\n
             Service: {$notification->getService()}.\n
             Date: {$notification->getDate()}: {$notification->getTimeInterval()}\n
-            Doctor: {$notification->getDoctorName()}\n
+            Medic: {$notification->getMedicName()}\n
             ");
 
         $this->mailer->send($email);

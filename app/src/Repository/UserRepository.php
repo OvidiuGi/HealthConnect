@@ -71,7 +71,7 @@ class UserRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function getDoctorServices(int $id): Collection
+    public function getMedicServices(int $id): Collection
     {
         return $this->findOneBy(['id' => $id])->getServices();
     }
