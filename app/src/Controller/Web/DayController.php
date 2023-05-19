@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Web;
 
 use App\Entity\Appointment;
+use App\Entity\User;
 use App\Form\Web\AddBreakType;
 use App\Form\Web\AddDayType;
 use App\Repository\AppointmentRepository;
@@ -73,9 +74,11 @@ class DayController extends AbstractController
     public function addBreak(int $id, Request $request): Response
     {
         $day = $this->dayRepository->findOneBy(['id' => $id]);
+        /** @var User $user */
+        $user = $this->getUser();
         $appointment = new Appointment();
-        $appointment->setMedic($this->getUser());
-        $appointment->setCustomer($this->getUser());
+        $appointment->setMedic($user);
+        $appointment->setCustomer($user);
         $appointment->setDate($day->getDate());
 
         $form = $this->createForm(AddBreakType::class, $appointment);

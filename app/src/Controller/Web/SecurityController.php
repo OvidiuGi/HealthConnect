@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route(path: '/')]
 class SecurityController extends AbstractController
@@ -22,9 +21,9 @@ class SecurityController extends AbstractController
     use LoggerAwareTrait;
 
     public function __construct(
-        private UserPasswordHasherInterface $passwordHasher,
-        private UserRepository $userRepository,
-        private LoggerInterface $analyticsLogger
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly UserRepository              $userRepository,
+        private readonly LoggerInterface $analyticsLogger
     ) {
     }
 
@@ -70,6 +69,9 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route(path: '/logout', name: 'web_logout', methods: ['GET'])]
     public function logout(): void
     {

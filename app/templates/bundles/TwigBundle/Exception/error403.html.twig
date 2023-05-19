@@ -1,0 +1,7 @@
+{% extends '/bundles/TwigBundle/Exception/base_error.html.twig' %}
+
+{% block body %}
+    <h1>Oops, {{ status_code }}! {{ status_text }}!</h1>
+    <h1> You don't have permission to access this resource. </h1>
+    <div class="btn"><a href={{ path('web_main_page') }}>Return to Home</a></div>
+{% endblock %}

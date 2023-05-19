@@ -20,12 +20,12 @@ final class Version20230307010940 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE appointments ADD time_interval VARCHAR(255) NOT NULL, DROP start_time, DROP end_time');
+        $this->addSql('ALTER TABLE appointment ADD time_interval VARCHAR(255) NOT NULL, DROP start_time, DROP end_time');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE appointments ADD start_time DATETIME DEFAULT NULL, ADD end_time DATETIME DEFAULT NULL, DROP time_interval');
+        $this->addSql('ALTER TABLE appointment ADD start_time DATETIME DEFAULT NULL, ADD end_time DATETIME DEFAULT NULL, DROP time_interval');
     }
 }

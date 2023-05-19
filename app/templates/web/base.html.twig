@@ -65,21 +65,7 @@
 
 <body>
     {% block body %} {% endblock %}
-    {{ encore_entry_script_tags('jquery') }}
     {{ encore_entry_script_tags('new_appointment') }}
-    <div class="center-flash-message">
-        {%block flash_messages %}
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="flash-{{ label }}">
-                        <div class="alert alert-{{ label }}">
-                            {{ message }}.
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% endblock %}
-    </div>
 </body>
 
 <footer>

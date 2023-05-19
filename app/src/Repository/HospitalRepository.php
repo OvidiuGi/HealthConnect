@@ -20,11 +20,7 @@ class HospitalRepository extends ServiceEntityRepository
 
     public function getPaginatedFilteredSorted(array $options): array
     {
-        $direction = isset($options['direction']) ? strtoupper($options['direction']) : 'ASC';
-
-        if (!in_array(strtoupper($direction), ['ASC', 'DESC'])) {
-            $options['direction'] = 'ASC';
-        }
+        $sortBy = isset($options['sortBy']) ? strtoupper($options['sortBy']) : 'ASC';
 
         $query = $this->entityManager
             ->createQueryBuilder()
@@ -35,11 +31,15 @@ class HospitalRepository extends ServiceEntityRepository
             ->setMaxResults($options['limit']);
 
         if (isset($options['search'])) {
-            $query->andWhere('h.name LIKE :search')->setParameter(':search', '%' . $options['search'] . '%');
+            $query
+                ->andWhere('h.name LIKE :search')
+                ->setParameter(':search', '%' . $options['search'] . '%')
+                ->orderBy('h.name', $sortBy)
+            ;
         }
 
-        if (isset($options['sortBy'])) {
-            $query->orderBy('h.' . $options['sortBy'], $direction);
+        if (isset($options['filterBy'])) {
+            $query->orderBy('h.' . $options['filterBy'], $sortBy);
         }
 
         return $query->getQuery()->execute();

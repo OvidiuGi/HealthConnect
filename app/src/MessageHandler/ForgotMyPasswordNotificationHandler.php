@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\MessageHandler;
 
 use App\Message\ForgotMyPasswordNotification;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Mime\Email;
@@ -12,11 +15,16 @@ use Symfony\Component\Routing\RouterInterface;
 #[AsMessageHandler]
 class ForgotMyPasswordNotificationHandler
 {
-    public function __construct(private MailerInterface $mailer, private RouterInterface $router)
-    {
+    public function __construct(
+        private readonly MailerInterface $mailer,
+        private readonly RouterInterface $router
+    ) {
     }
 
-    public function __invoke(ForgotMyPasswordNotification $notification)
+    /**
+     * @throws TransportExceptionInterface
+     */
+    public function __invoke(ForgotMyPasswordNotification $notification): void
     {
         $changePasswordUrl = $this->router->generate(
             'reset_password',
@@ -25,7 +33,7 @@ class ForgotMyPasswordNotificationHandler
         );
 
         $email = (new Email())
-            ->from('licenta@sales.com')
+            ->from('sales@healthconnect.com')
             ->to($notification->getEmail())
             ->subject('Password change request')
             ->text("We've received your password change request.\n This link will expire in 1 hour.")

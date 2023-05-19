@@ -8,7 +8,7 @@ use App\Repository\DayRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DayRepository::class)]
-#[ORM\Table(name: 'days')]
+#[ORM\Table(name: 'day')]
 class Day
 {
     #[ORM\Id]

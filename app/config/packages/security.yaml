@@ -46,9 +46,18 @@ security:
                 lifetime: 604800 # 1 week in seconds
 
     access_control:
-#         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
-#         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/admin/login, roles: PUBLIC_ACCESS, methods:[GET, POST] }
+         - { path: ^/login, roles: PUBLIC_ACCESS, methods:[GET, POST] }
+         - { path: ^/forgot-password, roles: PUBLIC_ACCESS, methods:[GET, POST] }
+         - { path: ^/reset-password, roles: PUBLIC_ACCESS, methods:[GET, POST] }
+         - { path: ^/register, roles: PUBLIC_ACCESS, methods:[GET, POST] }
+         - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/medic, roles: ROLE_MEDIC, methods:[GET,POST] }
+         - { path: ^/appointments, roles: ROLE_USER, methods:[GET, POST] }
+         - { path: ^/hospitals, roles: ROLE_USER, methods:[GET] }
+         - { path: ^/edit, roles: ROLE_USER, methods:[GET, POST] }
+         - { path: ^/delete, roles: ROLE_USER }
+         - { path: ^/, roles: PUBLIC_ACCESS, methods: [GET]}
 
 when@test:
     security:

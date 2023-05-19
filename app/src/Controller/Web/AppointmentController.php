@@ -32,17 +32,16 @@ class AppointmentController extends AbstractController
     #[Route(path:'/appointments', name: 'web_show_appointments', methods: ['GET'])]
     public function showAppointments(Request $request): Response
     {
-        $cacheTag = 'show_appointments_' . $this->getUser()->getId();
+        $page = (int)$request->query->get('page', 1);
+        $size = (int)$request->query->get('size', 10);
+        $cacheTag = 'show_appointments_' . $this->getUser()->getId() . 'page_' . $page;
 
-        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($request, $cacheTag) {
-            $paginate['page'] = (int)$request->query->get('page', 1);
-            $paginate['size'] = (int)$request->query->get('size', 10);
-
+        return $this->cache->get($cacheTag, function (ItemInterface $item) use ($page, $size, $cacheTag) {
             $appointments = $this
                 ->appointmentRepository
-                ->getPaginatedByUser($paginate['page'], $paginate['size'], $this->getUser()->getId());
+                ->getPaginatedByUser($page, $size, $this->getUser()->getId());
             $totalPages = \ceil(
-                \count($this->appointmentRepository->findBy(['customer' => $this->getUser()])) / $paginate['size']
+                \count($this->appointmentRepository->findBy(['customer' => $this->getUser()])) / $size
             );
 
             $item->expiresAfter(43200);
@@ -59,8 +58,8 @@ class AppointmentController extends AbstractController
 
             return $this->render('web/appointment/show_appointments_page.html.twig', [
                 'appointments' => $appointments,
-                'page' => $paginate['page'],
-                'size' => $paginate['size'],
+                'page' => $page,
+                'size' => $size,
                 'totalPages' => $totalPages,
             ]);
         });

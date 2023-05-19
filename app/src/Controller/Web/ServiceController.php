@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Web;
 
 use App\Entity\Service;
@@ -17,9 +19,9 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class ServiceController extends AbstractController
 {
     public function __construct(
-        private ServiceRepository $serviceRepository,
-        private UserRepository $userRepository,
-        private TagAwareCacheInterface $cache,
+        private readonly ServiceRepository      $serviceRepository,
+        private readonly UserRepository         $userRepository,
+        private readonly TagAwareCacheInterface $cache,
     ) {
     }
 

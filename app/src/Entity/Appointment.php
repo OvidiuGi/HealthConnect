@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AppointmentRepository::class)]
-#[ORM\Table(name: 'appointments')]
+#[ORM\Table(name: 'appointment')]
 class Appointment
 {
     #[ORM\Id]

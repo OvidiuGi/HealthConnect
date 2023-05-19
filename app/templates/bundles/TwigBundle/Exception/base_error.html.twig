@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Error!{% endblock %}</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('error') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('error') }}
+    {% endblock %}
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

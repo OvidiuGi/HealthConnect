@@ -17,8 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Table(name: '`hospital`')]
 class Hospital
 {
-    #[ORM\Id()]
-    #[ORM\GeneratedValue()]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private int $id;
 

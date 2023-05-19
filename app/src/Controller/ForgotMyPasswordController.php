@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Form\ForgotMyPasswordType;
@@ -18,9 +20,9 @@ use Symfony\Component\Uid\Uuid;
 class ForgotMyPasswordController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private UserPasswordHasherInterface $passwordHasher,
-        private MessageBusInterface $bus
+        private readonly UserRepository              $userRepository,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly MessageBusInterface $bus
     ) {
     }
 
@@ -31,16 +33,14 @@ class ForgotMyPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $givenEmail = $form->getData()->email;
-
-            $user = $this->userRepository->findOneBy(['email' => $givenEmail]);
+            $user = $this->userRepository->findOneBy(['email' => $form->getData()->email]);
             if (null === $user) {
                 return $this->render('forgot_password/forgot_password.html.twig', [
                     'form' => $form,
                 ]);
             }
 
-            $user->forgotPasswordToken = Uuid::v4();
+            $user->forgotPasswordToken = (string)Uuid::v4();
             $user->setForgotPasswordTokenExpiresAt(new \DateTimeImmutable('+1 hour'));
             $this->userRepository->save($user);
 
@@ -57,6 +57,10 @@ class ForgotMyPasswordController extends AbstractController
     #[Route(path:"/reset-password", name:"reset_password", methods:["GET","POST"])]
     public function reset(Request $request): Response
     {
+        if ($request->get('token') === null) {
+            return $this->redirectToRoute('web_login');
+        }
+
         $user = $this->userRepository->findOneBy(['forgotPasswordToken' => $request->get('token')]);
 
         if (null === $user) {

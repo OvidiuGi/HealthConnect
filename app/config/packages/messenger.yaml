@@ -8,13 +8,10 @@ framework:
                 options:
                     exchange:
                         name: 'email_exchange'
-                        type: fanout
+                        type: 'direct'
+                    queues:
+                        email_queue : ~
             failed: 'doctrine://default?queue_name=failed'
 
         routing:
             Symfony\Component\Mailer\Messenger\SendEmailMessage: rabbitmq
-            Symfony\Component\Notifier\Message\ChatMessage: rabbitmq
-            Symfony\Component\Notifier\Message\SmsMessage: rabbitmq
-
-            # Route your messages to the transports
-            # 'App\Message\YourMessage': async

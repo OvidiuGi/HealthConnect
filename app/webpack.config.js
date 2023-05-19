@@ -23,9 +23,8 @@ Encore
     .addEntry('web', './assets/js/web.js')
     .addEntry('form', './assets/js/form.js')
     .addEntry('admin', './assets/js/admin.js')
-    .addEntry('jquery', './assets/js/jquery.min.js')
     .addEntry('new_appointment', './assets/js/new_appointment.js')
-    .addEntry('flash_messages', './assets/js/flash_messages.js')
+    .addEntry('error', './assets/js/error.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     .enableStimulusBridge('./assets/controllers.json')

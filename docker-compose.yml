@@ -1,7 +1,7 @@
 version: "3.7"
 
 networks:
-  licenta:
+  healthconnect:
     driver: bridge
     ipam:
       config:
@@ -11,42 +11,41 @@ volumes:
   db_data:
 
 services:
-  #nginx service
-  licenta-nginx-service:
+  healthconnect-nginx-service:
     image: nginx:stable-alpine
-    container_name: licenta-nginx-container
+    container_name: healthconnect-nginx-container
     ports:
       - "8080:80"
     volumes:
       - ./app:/var/www/app
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - licenta-php-service
-      - licenta-mysql-service
+      - healthconnect-php-service
+      - healthconnect-mysql-service
     networks:
-      licenta:
+      healthconnect:
         ipv4_address: 160.100.0.5
 
-  licenta-php-service:
-    image: licenta-php-image
+  healthconnect-php-service:
+    image: healthconnect-php-image
     build:
       context: .
       dockerfile: ./php/Dockerfile
-    container_name: licenta-php-container
+    container_name: healthconnect-php-container
     ports:
       - "9000:9000"
     environment:
-        PHP_IDE_CONFIG: serverName=licenta.local
+        PHP_IDE_CONFIG: serverName=healthconnect.local
     volumes:
       - ./app:/var/www/app
       - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     networks:
-      licenta:
+      healthconnect:
         ipv4_address: 160.100.0.6
 
-  licenta-mysql-service:
+  healthconnect-mysql-service:
     image: mysql:8.0
-    container_name: licenta-mysql-container
+    container_name: healthconnect-mysql-container
     ports:
       - "3306:3306"
     volumes:
@@ -55,61 +54,59 @@ services:
     restart: always # always, on-failure, unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: parola123
-      MYSQL_DATABASE: licenta
-      MYSQL_USER: user
-      MYSQL_PASSWORD: parola123
+      MYSQL_DATABASE: healthconnect
     networks:
-      licenta:
+      healthconnect:
         ipv4_address: 160.100.0.7
 
-  licenta-redis-service:
+  healthconnect-redis-service:
     image: redis:6.2
-    container_name: licenta-redis-container
+    container_name: healthconnect-redis-container
     ports:
       - "6379:6379"
     restart: unless-stopped
     networks:
-      licenta:
+      healthconnect:
         ipv4_address: 160.100.0.12
 
-  licenta-mailer-service:
+  healthconnect-mailer-service:
     image: schickling/mailcatcher
-    container_name: licenta-mailcatcher-container
+    container_name: healthconnect-mailcatcher-container
     ports:
       - "1080:1080"
       - "1025:1025"
     networks:
-      licenta:
+      healthconnect:
         ipv4_address: 160.100.0.11
 
-  licenta-rabbitmq-service:
+  healthconnect-rabbitmq-service:
     image: rabbitmq:3.9-management
-    container_name: licenta-rabbitmq-container
+    container_name: healthconnect-rabbitmq-container
     depends_on:
-      - licenta-php-service
+      - healthconnect-php-service
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
-        licenta:
+        healthconnect:
             ipv4_address: 160.100.0.10
 
-  licenta-supervisor-service:
-    image: licenta-supervisor-image
+  healthconnect-supervisor-service:
+    image: healthconnect-supervisor-image
     build:
       context: .
       dockerfile: ./supervisor/Dockerfile
-    container_name: licenta-supervisor-container
+    container_name: healthconnect-supervisor-container
     depends_on:
-      - licenta-php-service
-      - licenta-redis-service
-      - licenta-mailer-service
-      - licenta-rabbitmq-service
+      - healthconnect-php-service
+      - healthconnect-redis-service
+      - healthconnect-mailer-service
+      - healthconnect-rabbitmq-service
     links:
-        - licenta-php-service
-        - licenta-redis-service
-        - licenta-mailer-service
-        - licenta-rabbitmq-service
+        - healthconnect-php-service
+        - healthconnect-redis-service
+        - healthconnect-mailer-service
+        - healthconnect-rabbitmq-service
     volumes:
         - ./:/var/www/
         - ./supervisor/supervisord.conf/:/etc/supervisor/conf.d/supervisord.conf
@@ -117,5 +114,5 @@ services:
         - ./log:/var/log/supervisor/log
     restart: unless-stopped
     networks:
-        licenta:
+        healthconnect:
             ipv4_address: 160.100.0.4

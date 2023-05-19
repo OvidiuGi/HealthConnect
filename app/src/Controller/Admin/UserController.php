@@ -17,8 +17,8 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class UserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private TagAwareCacheInterface $cache
+        private readonly UserRepository $userRepository,
+        private readonly TagAwareCacheInterface $cache
     ) {
     }
 

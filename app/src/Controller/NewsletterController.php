@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -16,11 +18,10 @@ use Symfony\Contracts\Cache\CacheInterface;
 class NewsletterController extends AbstractController
 {
     public function __construct(
-        private UserRepository      $userRepository,
-        private MessageBusInterface $bus,
-        private CacheInterface      $cache
-    )
-    {
+        private readonly UserRepository      $userRepository,
+        private readonly MessageBusInterface $bus,
+        private readonly CacheInterface $cache
+    ) {
     }
 
     #[Route(path: '/admin/newsletter/send', name: 'admin_send_newsletter', methods: ['GET', 'POST'])]
@@ -43,7 +44,7 @@ class NewsletterController extends AbstractController
     }
 
     #[Route(path: '/newsletter/subscribe', name: 'web_subscribe_newsletter', methods: ['POST'])]
-    public function subscribe(Request $request): Response
+    public function subscribe(): Response
     {
         /** @var User $user */
         $user = $this->getUser();

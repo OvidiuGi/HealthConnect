@@ -16,8 +16,8 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class MainPageController extends AbstractController
 {
     public function __construct(
-        private HospitalRepository $hospitalRepository,
-        private TagAwareCacheInterface $cache
+        private readonly HospitalRepository $hospitalRepository,
+        private readonly TagAwareCacheInterface $cache
     ) {
     }
 
@@ -46,7 +46,7 @@ class MainPageController extends AbstractController
     {
         $options = [];
         $options['page'] = (int)$request->query->get('page', 1);
-        $options['limit'] = (int)$request->query->get('limit', 10);
+        $options['limit'] = (int)$request->query->get('limit', 3);
         $options['sortBy'] = $request->query->get('sortBy');
         $options['direction'] = $request->query->get('direction');
         $options['search'] = $request->query->get('search');

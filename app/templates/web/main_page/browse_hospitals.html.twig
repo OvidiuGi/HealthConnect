@@ -7,26 +7,73 @@
                                 <input id="search-focus" type="search" class="form-control" />
                             </div>
                             <div class="col-1">
-                                <button class="btn btn-primary">
-                                    Search
-                                </button>
+                                <a>
+                                    <button class="btn btn-outline-dark" onclick="function searchHospitals() {
+                                            var searchQuery = document.getElementById('search-focus').value;
+                                            var filterCriteria = '';
+                                            var sortCriteria;
+                                            if (document.getElementById('sort').value === 'Ascending') {
+                                                sortCriteria = 'asc';
+                                            } else {
+                                                sortCriteria = 'desc';
+                                            }
+                                            if (document.getElementById('name').checked) {
+                                                filterCriteria ='name';
+                                            }
+                                            if (document.getElementById('address').checked) {
+                                            filterCriteria = 'address';
+                                            }
+                                            if (document.getElementById('city').checked) {
+                                            filterCriteria = 'city';
+                                            }
+                                            if (document.getElementById('description').checked) {
+                                            filterCriteria = 'description';
+                                            }
+                                            if (document.getElementById('email').checked) {
+                                            filterCriteria = 'email';
+                                            }
+                                            console.log(name);
+                                            window.location.href = '{{ path('web_browse_hospitals') }}?search=' +
+                                                    encodeURIComponent(searchQuery) +
+                                                    '&filterBy=' +
+                                                    encodeURIComponent(filterCriteria) +
+                                                    '&sortBy=' +
+                                                    encodeURIComponent(sortCriteria)
+                                            ;
+                                    }
+                                    searchHospitals()">
+                                        Search
+                                    </button>
+                                </a>
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-2">
-                                <h4>Sort By:</h4>
-                                <div class="checkbox">
-                                    <label><input type="checkbox" class="icheck"> Application</label>
-                                </div>
-                                <div class="checkbox"> <label><input type="checkbox" class="icheck"> Design</label>
-                                </div>
-                                <div class="checkbox"> <label><input type="checkbox" class="icheck"> Desktop</label>
-                                </div>
-                                <div class="checkbox"> <label><input type="checkbox" class="icheck"> Management</label>
-                                </div>
-                                <div class="checkbox"> <label><input type="checkbox" class="icheck"> Mobile</label>
-                                </div>
-                                </div>
+                                    <h4>Filter By:</h4>
+                                    <div class="checkbox">
+                                        <label><input id="name" type="checkbox" class="icheck"> Name</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input id="address" type="checkbox" class="icheck"> Address</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input id="city" type="checkbox" class="icheck"> City</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input id="description" type="checkbox" class="icheck"> Description</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label><input id="email" type="checkbox" class="icheck"> Email</label>
+                                    </div>
+                                    <div class="checkbox">
+                                        <label for="sort">Sort by:</label>
+                                        <select class="dropdown-toggle" id="sort">
+                                            <option>Ascending</option>
+                                            <option>Descending</option>
+                                        </select>
+                                    </div>
+                            </div>
 
                             <div class="col-md-10">
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -55,15 +102,9 @@
                         {% if totalPages > 0 %}
                             <nav aria-label="Pagination">
                                 <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a href="#" class="nav-link text-secondary page-link">Previous</a>
-                                    </li>
                                     {% for i in 1..totalPages%}
                                         <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('web_browse_hospitals') }}?page={{i}}">{{i}}</a></li>
                                     {%endfor%}
-                                    <li class="page-item">
-                                        <a href="#" class="nav-link text-secondary page-link">Next</a>
-                                    </li>
                                 </ul>
                             </nav>
                         {% endif %}

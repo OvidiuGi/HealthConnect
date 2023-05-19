@@ -18,9 +18,9 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 class ScheduleController extends AbstractController
 {
     public function __construct(
-        private ScheduleRepository $scheduleRepository,
-        private UserRepository $userRepository,
-        private TagAwareCacheInterface $cache
+        private readonly ScheduleRepository $scheduleRepository,
+        private readonly UserRepository     $userRepository,
+        private readonly TagAwareCacheInterface $cache
     ) {
     }
 

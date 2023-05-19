@@ -20,14 +20,14 @@ class NewAppointmentNotification
         return $this->appointment->getCustomer()->email;
     }
 
-    public function getAppointmentDate(): string
+    public function getDate(): string
     {
         return $this->appointment->getDate()->format('Ymd');
     }
 
-    public function getAppointmentTime(): string
+    public function getStartTime(): string
     {
-        return $this->appointment->getStartTime()->format('Hi') . $this->appointment->getEndTime()->format('Hi') . '00';
+        return $this->appointment->getStartTime()->format('Hi') . '00';
     }
 
     public function getService(): string

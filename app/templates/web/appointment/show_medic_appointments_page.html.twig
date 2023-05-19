@@ -58,15 +58,9 @@
     {% if totalPages > 0 %}
     <nav aria-label="Pagination">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a href="#" class="nav-link text-secondary page-link">Previous</a>
-            </li>
             {% for i in 1..totalPages%}
                 <li class="page-item"><a class="nav-link text-secondary page-link" href="{{ path('web_medic_appointments') }}?page={{i}}">{{i}}</a></li>
             {%endfor%}
-            <li class="page-item">
-                <a href="#" class="nav-link text-secondary page-link">Next</a>
-            </li>
         </ul>
     </nav>
     {% endif %}
