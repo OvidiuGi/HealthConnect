@@ -17,7 +17,7 @@ class MainPageController extends AbstractController
 {
     public function __construct(
         private readonly HospitalRepository $hospitalRepository,
-        private readonly TagAwareCacheInterface $cache
+        private readonly TagAwareCacheInterface $cacheApp
     ) {
     }
 
@@ -27,14 +27,14 @@ class MainPageController extends AbstractController
         if ($this->isGranted('ROLE_USER')) {
             $cacheKey = 'main_page_' . $this->getUser()->getId();
 
-            return $this->cache->get($cacheKey, function (ItemInterface $item) {
+            return $this->cacheApp->get($cacheKey, function (ItemInterface $item) {
                 $item->expiresAfter(43200);
 
                 return $this->render('web/main_page/main_page.html.twig');
             });
         }
 
-        return $this->cache->get('main_page', function (ItemInterface $item) {
+        return $this->cacheApp->get('main_page', function (ItemInterface $item) {
             $item->expiresAfter(43200);
 
             return $this->render('web/main_page/main_page.html.twig');
@@ -55,5 +55,17 @@ class MainPageController extends AbstractController
             'hospitals' => $this->hospitalRepository->getPaginatedFilteredSorted($options),
             'totalPages' => \ceil(\count($this->hospitalRepository->findAll()) / $options['limit']),
         ]);
+    }
+
+    #[Route(path: '/about-us', name: 'web_about_us', methods: ['GET'])]
+    public function aboutUs(): Response
+    {
+        return $this->render('web/main_page/about_us.html.twig');
+    }
+
+    #[Route(path: '/faq', name: 'web_faq', methods: ['GET'])]
+    public function faq(): Response
+    {
+        return $this->render('web/main_page/faq.html.twig');
     }
 }

@@ -1,5 +1,5 @@
 {% extends 'form/base.form.html.twig' %}
-{% block title %} Welcome! {% endblock %}
+{% block title %}Add break{% endblock %}
 {% block body %}
     {{ form_start(form, {method: 'POST'}) }}
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

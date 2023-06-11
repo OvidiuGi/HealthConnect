@@ -3,17 +3,18 @@
 {% block body %}
     <form action="{{ path('web_login') }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <h1>Please sign in</h1>
+        <h1>Welcome!</h1>
         <div class="form-floating">
             <input type="email" class="form-control" value="{{ last_username }}" name="_username">
-            <label for="floatingInput">Email address</label>
+            <label for="floatingInput">Email:</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" name="_password">
-            <label for="floatingInput">Password</label>
+            <label for="floatingInput">Password:</label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
     </form>
+    <br>
     <div class="checkbox mb-3">
         <label>
             <input type="checkbox" name="_remember_me" checked> Remember me
@@ -31,6 +32,11 @@
                 modalTitle: 'Forgot password?',
                 modalSubmit: 'Send reset link',
             }) }}
+        </label>
+    </div>
+    <div class="checkbox mb-3">
+        <label>
+            <a href="{{ path('web_register') }}">Don't have an account? Register now!</a>
         </label>
     </div>
     {% if error %}

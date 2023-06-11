@@ -20,8 +20,8 @@
                 {% if is_granted('ROLE_MEDIC') %}
                 <li><a href="{{ path('web_medic_main_page') }}" class="nav-link px-2 text-white">Medic Dashboard</a></li>
                 {% endif %}
-                <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">About us</a></li>
+                <li><a class="nav-link px-2 text-white" href={{ path("web_faq") }}>FAQs</a></li>
+                <li><a class="nav-link px-2 text-white" href={{ path("web_about_us") }}>About us</a></li>
                 {% if app.user %}
                     <li><a href="{{ path('web_show_appointments') }}" class="nav-link px-2 text-white">My Appointments</a></li>
                 {% endif %}
@@ -76,8 +76,8 @@
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ path('web_main_page') }}">Home</a></li>
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="{{ path('web_show_appointments') }}">My Appointments</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">FAQs</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href="#">About us</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href={{ path("web_faq") }}>FAQs</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-muted" href={{ path("web_about_us") }}>About us</a></li>
                 </ul>
             </div>
             {% if app.user and app.user.isSubscribed == false %}

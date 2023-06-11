@@ -1,16 +1,16 @@
 {% extends 'web/base.html.twig' %}
-
+{% block title %}Browse medics{% endblock %}
 {% block body %}
     <main>
         <div class="container" >
             <div class="row">
                 {% for medic in medics%}
                     <div class="card" style="max-width: 15rem; margin-right:3rem">
-                        <img src="https://via.placeholder.com/150" class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Picture" style="width: 7rem; height: 7rem;">
+                        <img src="{{ asset('build/images/doctor.png') }}" class="card-img-top rounded-circle mx-auto mt-3" alt="Profile Picture" style="width: 7rem; height: 7rem;">
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ medic.firstName}} {{ medic.lastName }}</h5>
                             <p class="card-text">{{ medic.specialization }}</p>
-                            <p class="card-text">, Experience {{ medic.experience }} years</p>
+                            <p class="card-text">Experience {{ medic.experience }} years</p>
                             <p><a class="btn btn-secondary" href="{{ path('web_add_appointment_by_medic', {'id': medic.id}) }}" role="button">Book</a></p>
                         </div>
                     </div>

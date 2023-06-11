@@ -1,5 +1,5 @@
 {% extends 'web/base.html.twig' %}
-
+{% block title %}Homepage{% endblock %}
 {% block body %}
     <main>
         <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -13,9 +13,9 @@
                     <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
                     <div class="container">
                         <div class="carousel-caption text-start">
-                            <h1>Example headline.</h1>
-                            <p>Some representative placeholder content for the first slide of the carousel.</p>
-                            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                            <h1>Don't have an account?</h1>
+                            <p>Unlock the Power of HealthConnect: Join Us and Simplify Your Healthcare Journey!</p>
+                            <p><a class="btn btn-lg btn-primary" href={{ path('web_register') }}>Sign up today</a></p>
                         </div>
                     </div>
                 </div>
@@ -23,9 +23,9 @@
                     <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
                     <div class="container">
                         <div class="carousel-caption">
-                            <h1>Another example headline.</h1>
-                            <p>Some representative placeholder content for the second slide of the carousel.</p>
-                            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                            <h1>Get to know us.</h1>
+                            <p>Discover HealthConnect: Your Trusted Companion for Seamless Healthcare Experiences!</p>
+                            <p><a class="btn btn-lg btn-primary" href={{ path("web_about_us") }}>Learn more</a></p>
                         </div>
                     </div>
                 </div>
@@ -33,9 +33,9 @@
                     <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></svg>
                     <div class="container">
                         <div class="carousel-caption text-end">
-                            <h1>One more for good measure.</h1>
-                            <p>Some representative placeholder content for the third slide of this carousel.</p>
-                            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                            <h1>Got any questions?</h1>
+                            <p>Discover the Answers to Your Questions with Ease</p>
+                            <p><a class="btn btn-lg btn-primary" href={{ path("web_faq") }}>FAQs</a></p>
                         </div>
                     </div>
                 </div>
