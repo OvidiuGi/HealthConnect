@@ -1,5 +1,3 @@
-HOME=/var/www/app
-
-* * * * * (/bin/date && /usr/local/bin/php ./bin/console app:delete-past-due-date-schedules) >> /var/log/supervisor/log/cron-supervisor.log 2>&1
-* * * * * (/bin/date && /usr/local/bin/php ./bin/console app:mark-completed-appointments) >> /var/log/supervisor/log/cron-supervisor.log 2>&1
-* * * * * (/bin/date && /usr/local/bin/php ./bin/console app:send-email-reminder) >> /var/log/supervisor/log/cron-supervisor.log 2>&1
+* * * * * (/bin/date && /usr/local/bin/php /var/www/app/bin/console app:delete-past-due-date-schedules) >> /var/log/supervisor/log/cron-supervisor.log 2>&1
+* * * * * (/bin/date && /usr/local/bin/php /var/www/app/bin/console app:mark-completed-appointments) >> /var/log/supervisor/log/cron-supervisor.log 2>&1
+* * * * * (/bin/date && /usr/local/bin/php /var/www/app/bin/console app:send-email-reminder) >> /var/log/supervisor/log/cron-supervisor.log 2>&1

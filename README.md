@@ -13,14 +13,26 @@ The application is built using the Symfony framework, along with MySQL, Docker, 
 ## Installation
 Clone this repository and run the following commands:
 ```
-docker-compose up -d
-docker-compose exec healthconnect-php-container composer install
-docker-compose exec healthconnect-php-container php bin/console doctrine:migrations:migrate
-php bin/console doctrine:fixtures:load
+docker compose build healthconnect-php-service
+docker compose up -d
+docker exec healthconnect-php-container composer install
+docker exec healthconnect-php-container npm install
+docker exec healthconnect-php-container npm run watch
+docker exec healthconnect-php-container php bin/console doctrine:migrations:migrate
+docker exec healthconnect-php-container php bin/console doctrine:fixtures:load --append
 ```
 
 ## Usage
 The application is available at 160.100.0.5
-
+# The admin account is :
+```
+email: gireada_ovidiu@test.com
+password: Parola123
+```
+# The doctor account is :
+```
+email: isabel_opris@test.com
+passwords: Parola123
+```
 ## Authors
 - Gireada Ovidiu-Gabriel
