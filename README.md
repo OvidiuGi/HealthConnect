@@ -21,6 +21,7 @@ docker exec healthconnect-php-container npm run watch
 docker exec healthconnect-php-container php bin/console doctrine:migrations:migrate
 docker exec healthconnect-php-container php bin/console doctrine:fixtures:load --append
 ```
+After the following commands, in .env, change the first line to prod.
 
 ## Usage
 The application is available at 160.100.0.5
