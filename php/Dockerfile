@@ -18,12 +18,11 @@ RUN apt-get install librabbitmq-dev -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_19.x | bash - &&\
     apt-get install -y nodejs
 
-WORKDIR /var/www/app
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY */healthconnect/app /var/www/app
+WORKDIR /var/www/app
 
+COPY ../app /var/www/app
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]

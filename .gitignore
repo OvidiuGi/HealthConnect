@@ -6,7 +6,7 @@ app/config/secrets/prod/prod.decrypt.private.php
 app/public/bundles/
 app/var/
 app/vendor/
-
+db_data/
 app/phpunit.xml
 app/.phpunit.result.cach
 log/
