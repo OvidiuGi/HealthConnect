@@ -1,9 +1,9 @@
 # HealthConnect Bachelor's Thesis Project
 
 ## Project Description
-This project is a part of the Bachelor's Thesis at the University of Tartu.
+This project is a part of the Bachelor's Thesis at Babes-Bolyai University.
 The project is a web application that allows users to search for doctors and book appointments with them. 
-The application is built using the Symfony framework, along with MySQL, Docker, Redis, RabbitMQ.
+The application is built using the Symfony framework, along with MySQL, Docker, Redis, and RabbitMQ.
 
 ### Prerequisites
 
